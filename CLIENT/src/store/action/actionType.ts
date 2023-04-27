@@ -1,0 +1,9 @@
+const actionType = Object.freeze({
+  //User
+  USER_LOGGIN_SUCCESS: "USER_LOGGIN_SUCCESS",
+  USER_LOGGIN_FAILED: "USER_LOGGIN_FAILED",
+  USER_LOGOUT_SUCCESS: "USER_LOGOUT_SUCCESS",
+  USER_LOGOUT_FAILED: "USER_LOGOUT_FAILED",
+  //
+});
+export default actionType;
