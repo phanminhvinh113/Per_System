@@ -3,7 +3,10 @@ import mongoose, { Schema } from 'mongoose' // Erase if already required
 interface KeyTokensType {
    user: object | string
    publicKey: string
+   refreshTokensUsed: object
    refreshToken: object
+   IP_Device: string | string[]
+   Device: string
 }
 // Declare the Schema of the Mongo model
 const KeyTokensSchema = new mongoose.Schema<KeyTokensType>(
@@ -18,9 +21,21 @@ const KeyTokensSchema = new mongoose.Schema<KeyTokensType>(
          required: true,
          unique: true,
       },
-      refreshToken: {
+      refreshTokensUsed: {
          type: Array,
          default: [],
+      },
+      refreshToken: {
+         type: String,
+         required: true,
+      },
+      IP_Device: {
+         type: String,
+         require: true,
+      },
+      Device: {
+         type: String,
+         required: true,
       },
    },
    {

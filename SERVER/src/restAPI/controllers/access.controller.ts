@@ -1,17 +1,73 @@
 import { Request, Response } from 'express'
 import accessService from '../service/access.service'
-
+import useragent from 'useragent'
+import { HEADER } from '../../utils/constant'
+require('dotenv').config()
+//
 class accessController {
-   register = async (req: Request, res: Response) => {
+   Register = async (req: Request, res: Response) => {
       try {
-         const response: any = await accessService.registerService(req.body)
-         return res.status(response?.status || 200).json(response)
+         const IP_Device = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+         const Device = useragent.parse(req.headers['user-agent']).os.toString()
+         //
+         return res.status(201).json(await accessService.registerService({ ...req.body, IP_Device, Device }))
+         //
       } catch (error) {
-         console.log(error)
-         return res.status(500).json({
+         return res.status(403).json({
             code: -1,
-            status: 500,
-            message: `Server error!`,
+            status: error.status,
+            message: error?.message,
+         })
+      }
+   }
+   Login = async (req: Request, res: Response) => {
+      try {
+         const IP_Device: string | string[] | undefined = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+         const Device = useragent.parse(req.headers['user-agent']).os.toString()
+         //
+         const response: any = await accessService.Login({ ...req.body, IP_Device, Device })
+         //
+         await res.cookie('refreshToken', response.data?.tokens.refreshToken, {
+            httpOnly: true,
+            secure: false,
+            path: `http://localhost:${process.env.PORT_REST_FULL}`,
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24 * 30, // 1 months
+         })
+         //
+         return res.status(201).json(response)
+      } catch (error) {
+         return res.status(403).json({
+            code: -1,
+            status: error.status,
+            message: error?.message,
+         })
+      }
+   }
+   Logout = async (req: Request, res: Response) => {
+      try {
+         return res.status(201).json(await accessService.LogOut(req.keyStore, req.User))
+      } catch (error) {
+         return res.status(403).json({
+            code: -1,
+            status: error.status,
+            message: error?.message,
+         })
+      }
+   }
+   handleRefreshToken = async (req: Request, res: Response) => {
+      try {
+         // const refreshToken = req.cookies['refreshToken']
+         const { refreshToken } = req.body
+         const userId: any = req.headers[HEADER.CLIENT_ID]
+         //
+         return res.status(201).json(await accessService.handleRefreshToken(refreshToken, userId))
+         //
+      } catch (error) {
+         return res.status(403).json({
+            code: -1,
+            status: error.status,
+            message: error?.message,
          })
       }
    }

@@ -1,8 +1,35 @@
-export interface User {
+export interface DeviceUser {
+   IP_Device: string
+   Device: string
+}
+export interface User extends DeviceUser {
+   _id?: string
+   userId?: string
    email: string
    password: string
    name: string
+   roles?: string[]
 }
+export interface UserKeyModel extends DeviceUser {
+   _id: string
+   refreshToken: string
+   refreshTokensUsed: string[]
+   publicKey: string
+   user: string | object
+}
+export interface UserLogin extends DeviceUser {
+   _id?: string
+   _userName?: string
+   email?: string
+   phone?: number | string
+   password: string
+   name?: string
+   _refreshToken?: string
+}
+// export interface UserLogOut {
+//    keyStore: UserKeyModel | undefined | null
+//    User: User | undefined | null
+// }
 export interface ResponseType {
    code: number | string
    status: number

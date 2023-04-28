@@ -1,18 +1,24 @@
 import express from 'express'
 import route from './routes/index.routes'
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
+import { ErrorHandler, RequestError } from './handle.error'
+
 require('dotenv').config()
 //
 const app = express()
-//
-
 //
 app.use(bodyParser.json())
 //
 app.use(bodyParser.urlencoded({ extended: true }))
 //
+app.use(cookieParser())
 //
 app.use(route)
+//
+app.use(RequestError)
+//
+app.use(ErrorHandler)
 //
 const ConnectRestFull = async (PORT: number | string = 3550) => {
    app.listen(PORT, () => {

@@ -1,19 +1,16 @@
 import { NextFunction, Response, Request } from 'express'
 import { findKeyById } from '../restAPI/service/apikey.service'
 import { ApiKeyModel } from '../restAPI/interface/index.interface'
-
-const HEADER = {
-   API_KEY: 'x-api-key',
-   AUTHORIZATION: 'authorization',
-}
+import { HEADER } from '../utils/constant'
 //
-declare global {
-   namespace Express {
-      interface Request {
-         objKey?: ApiKeyModel | null // Define your custom property
-      }
-   }
-}
+// declare global {
+//    namespace Express {
+//       interface Request {
+//          objKey?: ApiKeyModel | null
+//       }
+//    }
+// }
+
 //
 export const ApiKey = async (req: Request, res: Response, next: NextFunction) => {
    try {
@@ -47,16 +44,14 @@ export const ApiKey = async (req: Request, res: Response, next: NextFunction) =>
 export const Permission = (permission: string): ((req: Request, res: Response, next: NextFunction) => void) => {
    return async (req: Request, res: Response, next: NextFunction) => {
       //
-      if (!req.objKey?.permission) {
+      if (!req?.objKey?.permission) {
          return res.status(403).json({
             code: -1,
             message: 'Dennied Access!',
          })
       }
       //
-      console.log(req.objKey)
-      //
-      const isValidPermission: boolean = req.objKey.permission.includes(permission)
+      const isValidPermission: boolean = req?.objKey.permission.includes(permission)
       //
       if (!isValidPermission) {
          return res.status(403).json({
