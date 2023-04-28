@@ -1,8 +1,26 @@
-import mongoose, { Schema } from 'mongoose' // Erase if already required
+import { Schema, model } from 'mongoose' // Erase if already required
 import { Type_Products } from '../utils/constant'
-
+interface ProductType {
+   name: string
+   type: string[] | string
+   thumb: string
+   description: string
+   price: number
+   quantity: number
+   shop: string
+   discount: number
+   sold: number
+   stock: number
+   atrtibutes: object
+}
+interface ClothingType {
+   brand: string
+   size_chart: object | string[] | number[]
+   material: string
+}
+//
 // Declare the Schema of the Mongo model
-const productSchema = new mongoose.Schema(
+const productSchema = new Schema<ProductType>(
    {
       name: {
          type: String,
@@ -48,7 +66,7 @@ const productSchema = new mongoose.Schema(
    }
 )
 
-const clothingSchema = new Schema(
+const clothingSchema = new Schema<ClothingType>(
    {
       brand: { type: String, require: true },
       size_chart: { type: Array, require: true },
@@ -61,5 +79,7 @@ const clothingSchema = new Schema(
 )
 
 //Export the model
-export default mongoose.model('Product', productSchema)
-export mongoose.model('Clothes',clothingSchema)
+module.exports = {
+   ProductModel: model<ProductType>('Product', productSchema),
+   clothingModel: model<ClothingType>('Clothing', clothingSchema),
+}
