@@ -52,4 +52,14 @@ export const HEADER = Object.freeze({
    CLIENT_ID: 'x-client-id',
    AUTHORIZATION: 'authorization',
 })
-export const Type_Products = ['Electronic', 'Clothing', 'Furniture', 'Sport', 'Food', 'Cosmetics', 'Fashion']
+export const Enum_Type_Products = ['Electronic', 'Clothing', 'Furniture', 'Sport', 'Food', 'Cosmetics', 'Fashion']
+
+export const TypeProduct = Object.freeze({
+   Electronic: 'Electronic',
+   Clothing: 'Clothing',
+   Furniture: 'Furniture',
+   Sport: 'Sport',
+   Food: 'Food',
+   Cosmetics: 'Cosmetics',
+   Fashion: 'Fashion',
+})

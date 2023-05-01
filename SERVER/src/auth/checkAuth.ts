@@ -3,15 +3,6 @@ import { findKeyById } from '../restAPI/service/apikey.service'
 import { ApiKeyModel } from '../restAPI/interface/index.interface'
 import { HEADER } from '../utils/constant'
 //
-// declare global {
-//    namespace Express {
-//       interface Request {
-//          objKey?: ApiKeyModel | null
-//       }
-//    }
-// }
-
-//
 export const ApiKey = async (req: Request, res: Response, next: NextFunction) => {
    try {
       const key: string | undefined = req.headers[HEADER.API_KEY]?.toString()
@@ -47,7 +38,7 @@ export const Permission = (permission: string): ((req: Request, res: Response, n
       if (!req?.objKey?.permission) {
          return res.status(403).json({
             code: -1,
-            message: 'Dennied Access!',
+            message: 'Denied Access!',
          })
       }
       //
@@ -56,7 +47,7 @@ export const Permission = (permission: string): ((req: Request, res: Response, n
       if (!isValidPermission) {
          return res.status(403).json({
             code: -1,
-            message: 'Dennied Access!',
+            message: 'Denied Access!',
          })
       }
       //

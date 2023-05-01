@@ -46,7 +46,7 @@ export const Authentication = asyncHandler(async (req: Request, _res: Response, 
    if (!keyStore) throw new NotFoundError('Invalid Key Store!')
    //3
    const accessToken = req.headers[HEADER.AUTHORIZATION]
-   if (!accessToken) throw new AuthFailedError('Invalid Request')
+   if (!accessToken) throw new AuthFailedError('Invalid Request(MS TOKEN)')
    //4
    try {
       const decodeJWT = await VerifyToken(accessToken, keyStore.publicKey)

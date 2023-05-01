@@ -1,26 +1,11 @@
-import { Schema, model } from 'mongoose' // Erase if already required
-import { Type_Products } from '../utils/constant'
-interface ProductType {
-   name: string
-   type: string[] | string
-   thumb: string
-   description: string
-   price: number
-   quantity: number
-   shop: string
-   discount: number
-   sold: number
-   stock: number
-   atrtibutes: object
-}
-interface ClothingType {
-   brand: string
-   size_chart: object | string[] | number[]
-   material: string
-}
+import { Schema, model, Document } from 'mongoose' // Erase if already required
+import { Enum_Type_Products } from '../utils/constant'
+import { ClothingType, ProductType, ElectronicType, FurnitureType } from './interface.model'
+
 //
+interface ProductDocument extends ProductType, Document {}
 // Declare the Schema of the Mongo model
-const productSchema = new Schema<ProductType>(
+const productSchema = new Schema<ProductDocument>(
    {
       name: {
          type: String,
@@ -30,12 +15,11 @@ const productSchema = new Schema<ProductType>(
       type: {
          type: String,
          required: true,
-         enum: Type_Products,
+         enum: Enum_Type_Products,
       },
       thumb: {
          type: String,
          required: true,
-         unique: true,
       },
       description: String,
       price: {
@@ -47,6 +31,10 @@ const productSchema = new Schema<ProductType>(
          require: true,
       },
       shop: String,
+      shop_id: {
+         type: Schema.Types.ObjectId,
+         require: true,
+      },
       discount: Number,
       sold: {
          type: Number,
@@ -58,28 +46,54 @@ const productSchema = new Schema<ProductType>(
          require: true,
          default: 0,
       },
-      atrtibutes: { type: Schema.Types.Mixed, require: true },
+      attributes: { type: Schema.Types.Mixed, require: true },
    },
    {
       collection: '_Product',
       timestamps: true,
    }
 )
+//
 
+//
 const clothingSchema = new Schema<ClothingType>(
    {
       brand: { type: String, require: true },
       size_chart: { type: Array, require: true },
       material: { type: String, require: true },
+      shop_id: { type: Schema.Types.ObjectId, require: true, ref: 'User' },
    },
    {
-      collection: '_Clothes',
+      collection: '_Clothe',
       timestamps: true,
    }
 )
-
+const electronicSchema = new Schema<ElectronicType>(
+   {
+      manufactory: { type: String, require: true },
+      size_chart: { type: Array, require: true },
+      material: { type: String, require: true },
+      shop_id: { type: Schema.Types.ObjectId, require: true, ref: 'User' },
+   },
+   {
+      collection: '_Electronic',
+      timestamps: true,
+   }
+)
+const furnitureSchema = new Schema<FurnitureType>(
+   {
+      brand: { type: String, require: true },
+      size_chart: { type: Array, require: true },
+      material: { type: String, require: true },
+      shop_id: { type: Schema.Types.ObjectId, require: true, ref: 'User' },
+   },
+   {
+      collection: '_Furniture',
+      timestamps: true,
+   }
+)
 //Export the model
-module.exports = {
-   ProductModel: model<ProductType>('Product', productSchema),
-   clothingModel: model<ClothingType>('Clothing', clothingSchema),
-}
+export const ProductModel = model<ProductType>('Product', productSchema)
+export const ClothingModel = model<ClothingType>('Clothing', clothingSchema)
+export const ElectronicModel = model<ElectronicType>('Electronic', electronicSchema)
+export const FurnitureModel = model<FurnitureType>('Furniture', furnitureSchema)

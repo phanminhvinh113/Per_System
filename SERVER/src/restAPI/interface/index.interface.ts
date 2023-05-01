@@ -10,6 +10,13 @@ export interface User extends DeviceUser {
    name: string
    roles?: string[]
 }
+export interface UserDecodeJWT {
+   userId: string
+   email: string
+   name: string
+   roles?: string[]
+   privateKey: string
+}
 export interface UserKeyModel extends DeviceUser {
    _id: string
    refreshToken: string

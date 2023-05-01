@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { User, UserKeyModel, UserLogin } from '../interface/index.interface'
+import { User, UserDecodeJWT, UserKeyModel, UserLogin } from '../interface/index.interface'
 import { UserModel } from '../../models.mongo/User.model'
 import { FindUserByField, ROLES, ReasonStatusCode, STATE_USER, StatusCode } from '../../utils/constant'
 import KeyTokenService from './keyToken.service'
@@ -80,8 +80,8 @@ class accessService {
             const _user = await findUserByUserName(_userName, FindUserByField.EMAIL)
             if (!_user) throw new BadRequestError('User Name Not Exist!', 406)
             // COMPARE PASSWORD
-            const matchPasword = bcrypt.compareSync(password, _user.password)
-            if (!matchPasword) throw new AuthFailedError('Incorrect Password:X_01')
+            const matchPassword = bcrypt.compareSync(password, _user.password)
+            if (!matchPassword) throw new AuthFailedError('Incorrect Password:X_01')
             //Tracking Device
             const tracking = await TrackingDevice(_user._id, IP_Device, Device)
             //  CREATE KEY PRIVATE KEY AND PUBLIC KEY
@@ -117,12 +117,12 @@ class accessService {
       })
    }
    //LOGOUT
-   LogOut = (keyStore: UserKeyModel | undefined, UserInfo: User | undefined) =>
+   LogOut = (keyStore: UserKeyModel | undefined, UserInfo: UserDecodeJWT | undefined) =>
       new Promise(async (resolve, reject) => {
          try {
             if (!keyStore || !UserInfo) throw new BadRequestError('Invalid Parameter')
             // CHECK EXIST USER AND DELETE KEY  AFTER LOGOUT
-            const checkUserAndDelKey = [
+            const checkUserAndDelKey: any = [
                findUserByInfo({
                   _id: UserInfo.userId,
                   email: UserInfo.email,
@@ -136,7 +136,7 @@ class accessService {
             return resolve({
                code: 0,
                status: StatusCode.SUCCESS,
-               message: 'Log Out Sucess!',
+               message: 'Log Out Success!',
                data: {
                   acknowledge: delkeyResult ? true : false,
                   deletedCount: 1,
@@ -151,7 +151,7 @@ class accessService {
       return new Promise(async (resolve, reject) => {
          try {
             // Check if refresh token is already in use
-            const findToken = await KeyTokenService.findByRefrehTokenUsed(refreshToken, _userId)
+            const findToken = await KeyTokenService.findByRefreshTokenUsed(refreshToken, _userId)
             if (findToken) {
                //DECODE TO CHECK USER
                const decodeUser: User = await VerifyToken(refreshToken, findToken.publicKey)
@@ -163,7 +163,7 @@ class accessService {
             }
             // If refresh token of user hasn't been used yet
             const holderToken = await keyTokenService.findByRefreshToken(refreshToken, _userId)
-            if (!holderToken) throw new AuthFailedError("User Isn't Regited!")
+            if (!holderToken) throw new AuthFailedError("User Isn't Register!")
             const { email, userId, name, privateKey } = await VerifyToken(refreshToken, holderToken.publicKey)
 
             //Check Infor Of User
@@ -173,7 +173,7 @@ class accessService {
             const tokens: any = await createTokenPair({ userId, email, name }, holderToken.publicKey, privateKey)
             //
             if (!tokens) throw new AuthFailedError('Unauthorized Key!')
-            // Udpdate New Token!
+            // Update New Token!
             await holderToken?.updateOne({
                $set: {
                   refreshToken: tokens.refreshToken,
