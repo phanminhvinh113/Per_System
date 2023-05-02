@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { UserModel } from '../../models.mongo/User.model'
+import { UserModel } from '../../models.mongo/user.model'
 import { User, UserLogin } from '../interface/index.interface'
 import { Track_Device } from '../../utils/constant'
 import keyTokenModel from '../../models.mongo/keyToken.model'

@@ -2,7 +2,17 @@ import { ProductType } from '../../models.mongo/interface.model'
 import { ProductModel, ClothingModel, ElectronicModel, FurnitureModel } from '../../models.mongo/product.model'
 import { BadRequestError } from '../../core/error.response'
 import { TypeProduct } from '../../utils/constant'
+import { findAllDaftForShop, publicProductByShop, findAllPublicForShop, findAllProduct } from '../../models.mongo/repositories/product.repo'
 type productRegistryType = { [key: string]: any }
+//
+interface getAllProductType {
+   limit: number
+   skip: number
+   page: number
+   sort: string
+   filter: object
+   select: string[] | number[]
+}
 // PRODUCT FACTORY
 class ProductFactory {
    //
@@ -14,12 +24,35 @@ class ProductFactory {
 
    //
    async createProduct(type: string, payload: any) {
-      //
       if (!type || !payload) throw new BadRequestError('Missing Parameters')
       //
       const productClass: any = ProductFactory.productRegistry[type]
       if (!productClass) throw new BadRequestError('Error Type')
       return new productClass(payload).createProduct()
+   }
+   // PUT
+   async publicProductByShop(shop_id: string, product_id: string) {
+      return await publicProductByShop(shop_id, product_id)
+   }
+   // GET
+   async findAllDaftForShop({ shop_id, skip = 0, limit = 0 }: { shop_id: string | undefined; skip: number; limit: number }) {
+      const query = { shop_id, isDaft: true }
+      return await findAllDaftForShop({ query, skip, limit })
+   }
+   async findAllPublicForShop({ shop_id, skip = 0, limit = 0 }: { shop_id: string | undefined; skip: number; limit: number }) {
+      const query = { shop_id, isPublic: true }
+      return await findAllPublicForShop({ query, skip, limit })
+   }
+   async findAllProduct(query: any) {
+      const {
+         limit = 60,
+         sort = 'ctime',
+         filter = { isPublic: true },
+         page = 1,
+         select = ['name', 'thumb', 'price', 'description', 'discount'],
+      }: getAllProductType = query
+      //
+      return await findAllProduct({ limit, sort, filter, page, select })
    }
 }
 
@@ -36,7 +69,28 @@ class Product {
    sold: number
    stock: number
    attributes: object
-   constructor({ name, type, thumb, description, price, quantity, shop, discount, sold, stock, attributes, shop_id }: ProductType) {
+   isDaft: boolean
+   isPublic: boolean
+   product_rating: object | number
+   product_variations: any
+   constructor({
+      name,
+      type,
+      thumb,
+      description,
+      price,
+      quantity,
+      shop,
+      discount,
+      sold,
+      stock,
+      attributes,
+      shop_id,
+      product_rating,
+      isDaft,
+      isPublic,
+      product_variations,
+   }: ProductType) {
       this.name = name
       this.type = type
       this.thumb = thumb
@@ -49,6 +103,10 @@ class Product {
       this.sold = sold
       this.stock = stock
       this.attributes = attributes
+      this.isDaft = isDaft
+      this.isPublic = isPublic
+      this.product_rating = product_rating
+      this.product_variations = product_variations
    }
    // Create New Product
    async createProduct() {

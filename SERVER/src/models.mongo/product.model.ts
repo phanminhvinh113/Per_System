@@ -1,4 +1,5 @@
 import { Schema, model, Document } from 'mongoose' // Erase if already required
+import slugify from 'slugify'
 import { Enum_Type_Products } from '../utils/constant'
 import { ClothingType, ProductType, ElectronicType, FurnitureType } from './interface.model'
 
@@ -33,6 +34,7 @@ const productSchema = new Schema<ProductDocument>(
       shop: String,
       shop_id: {
          type: Schema.Types.ObjectId,
+         ref: 'User',
          require: true,
       },
       discount: Number,
@@ -47,6 +49,49 @@ const productSchema = new Schema<ProductDocument>(
          default: 0,
       },
       attributes: { type: Schema.Types.Mixed, require: true },
+      product_rating: {
+         rating_average: {
+            type: Number,
+            default: 0,
+         },
+         //set: (val: number) => Math.round(val * 10) / 10,
+         rating_1_star: {
+            type: Number,
+            default: 0,
+         },
+         rating_2_star: {
+            type: Number,
+            default: 0,
+         },
+         rating_3_star: {
+            type: Number,
+            default: 0,
+         },
+         rating_4_star: {
+            type: Number,
+            default: 0,
+         },
+         rating_5_star: {
+            type: Number,
+            default: 0,
+         },
+      },
+      product_variations: { type: Array, default: [] },
+      isDaft: {
+         type: Boolean,
+         default: true,
+         index: true,
+         select: false,
+         required: true,
+      },
+      isPublic: {
+         type: Boolean,
+         default: false,
+         index: true,
+         select: false,
+         required: true,
+      },
+      product_slug: String,
    },
    {
       collection: '_Product',
@@ -54,7 +99,10 @@ const productSchema = new Schema<ProductDocument>(
    }
 )
 //
-
+productSchema.pre('save', function (next) {
+   this.product_slug = slugify(this.name, { lower: true })
+   next()
+})
 //
 const clothingSchema = new Schema<ClothingType>(
    {

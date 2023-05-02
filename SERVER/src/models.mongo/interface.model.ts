@@ -3,6 +3,8 @@ export interface ProductType {
    type: string[] | string
    thumb: string
    description: string
+   isDaft: boolean
+   isPublic: boolean
    price: number
    quantity: number
    shop_id: object | string
@@ -11,6 +13,9 @@ export interface ProductType {
    sold: number
    stock: number
    attributes: object
+   product_rating: object | number
+   product_variations: object
+   product_slug: string | null
 }
 export interface ClothingType {
    brand: string

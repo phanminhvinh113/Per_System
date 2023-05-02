@@ -1,5 +1,5 @@
 import { deleteUser } from '../services/User.service'
-import { UserModel } from '../../models.mongo/User.model'
+import { UserModel } from '../../models.mongo/user.model'
 import { insertCommentBucket } from '../services/Comment.Bucket.service'
 const resolvers = {
    Query: {

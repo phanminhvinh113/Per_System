@@ -1,5 +1,5 @@
 import express from 'express'
-import { Authentication } from '../../../auth/auth.ultils'
+import { Authentication } from '../../../auth/auth.utils'
 const route = express.Router()
 //
 route.use(Authentication)

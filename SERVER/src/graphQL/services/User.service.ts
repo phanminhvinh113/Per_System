@@ -1,4 +1,4 @@
-import { UserModel } from '../../models.mongo/User.model'
+import { UserModel } from '../../models.mongo/user.model'
 //
 export const deleteUser = async (_: any, { _id }: { _id: string }) => {
    try {

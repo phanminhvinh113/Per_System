@@ -2,7 +2,7 @@ import express from 'express'
 const route = express.Router()
 import accessController from '../../controllers/access.controller'
 import { asyncHandler } from '../../../helpers/asyncHandler'
-import { Authentication } from '../../../auth/auth.ultils'
+import { Authentication } from '../../../auth/auth.utils'
 //
 route.post('/register', asyncHandler(accessController.Register))
 route.post('/login', asyncHandler(accessController.Login))

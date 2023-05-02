@@ -8,7 +8,7 @@ class RequestErr extends Error {
    }
 }
 export const RequestError = async (_req: Request, _res: Response, next: NextFunction) => {
-   const error = new RequestErr('Not Found!', 404)
+   const error = new RequestErr('Not Found Redirect!', 404)
    return next(error)
 }
 

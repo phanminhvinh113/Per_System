@@ -21,5 +21,76 @@ class ProductController {
          })
       }
    }
+   //
+   /**
+    * @description get all daft for shop
+    * @param req
+    * @param res
+    * @returns
+    */
+   getAllDaftForShop = async (req: Request, res: Response) => {
+      try {
+         //
+         const shop_id: string | undefined = req.User?.userId
+         const skip: any = req.query?.skip || 0
+         const limit: any = req.query?.limit || 60
+         //
+         return res.status(201).json(await productService.findAllDaftForShop({ shop_id, skip, limit }))
+         //
+      } catch (error) {
+         return res.status(403).json({
+            code: -1,
+            status: error.status || 403,
+            message: error?.message,
+         })
+      }
+   }
+   //
+   getAllPublicForShop = async (req: Request, res: Response) => {
+      try {
+         //
+         const shop_id: string | undefined = req.User?.userId
+         const skip: any = req.query?.skip || 0
+         const limit: any = req.query?.limit || 60
+         //
+         return res.status(201).json(await productService.findAllPublicForShop({ shop_id, skip, limit }))
+         //
+      } catch (error) {
+         return res.status(403).json({
+            code: -1,
+            status: error.status || 403,
+            message: error?.message,
+         })
+      }
+   }
+   //
+   publicProductByShop = async (req: Request, res: Response) => {
+      try {
+         //
+         const shop_id: any = req.User?.userId
+         const product_id: any = req.body.product_id
+         return res.status(201).json(await productService.publicProductByShop(shop_id, product_id))
+         //
+      } catch (error) {
+         return res.status(403).json({
+            code: -1,
+            status: error.status || 403,
+            message: error?.message,
+         })
+      }
+   }
+   //
+   findAllProducts = async (req: Request, res: Response) => {
+      try {
+         return res.status(201).json(await productService.findAllProduct(req.query))
+         //
+      } catch (error) {
+         return res.status(403).json({
+            code: -1,
+            status: error.status || 403,
+            message: error?.message,
+         })
+      }
+   }
 }
 export default new ProductController()
