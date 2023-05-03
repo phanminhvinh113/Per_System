@@ -9,3 +9,6 @@ export const getSelectData = (select: [] = []) => {
 export const unGetSelectData = (select: [] = []) => {
    return Object.fromEntries(select.map((el) => [el, 0]))
 }
+export const removeAllElementUnknown = (obj: object) => {
+   return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== null && value !== undefined))
+}

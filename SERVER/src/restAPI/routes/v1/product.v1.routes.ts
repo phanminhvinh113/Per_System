@@ -6,7 +6,7 @@ import { Authentication } from '../../../auth/auth.utils'
 //
 const route = express.Router()
 //
-
+route.get('/search', asyncHandler(productController.searchProduct))
 route.get('/', asyncHandler(productController.findAllProducts))
 //
 route.use(Authentication)

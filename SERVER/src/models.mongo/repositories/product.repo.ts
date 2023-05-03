@@ -52,3 +52,16 @@ export const findAllProduct = async ({ limit, sort, filter, page, select }: any)
       data: products ? products : [],
    }
 }
+export const searchProduct = async (keySearch: string) => {
+   const regexSearch: any = new RegExp(keySearch)
+   const results: any = await ProductModel.find({ $text: { $search: regexSearch } }, { score: { $meta: 'textScore' } })
+      .sort({ score: { $meta: 'textScore' } })
+      .lean()
+   //
+   return {
+      code: 0,
+      status: StatusCode.SUCCESS,
+      message: 'OK',
+      data: results,
+   }
+}

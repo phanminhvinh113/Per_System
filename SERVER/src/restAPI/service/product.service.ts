@@ -2,7 +2,16 @@ import { ProductType } from '../../models.mongo/interface.model'
 import { ProductModel, ClothingModel, ElectronicModel, FurnitureModel } from '../../models.mongo/product.model'
 import { BadRequestError } from '../../core/error.response'
 import { TypeProduct } from '../../utils/constant'
-import { findAllDaftForShop, publicProductByShop, findAllPublicForShop, findAllProduct } from '../../models.mongo/repositories/product.repo'
+import {
+   findAllDaftForShop,
+   publicProductByShop,
+   findAllPublicForShop,
+   findAllProduct,
+   searchProduct,
+} from '../../models.mongo/repositories/product.repo'
+import { Types } from 'mongoose'
+import { insertInvProduct } from '../../models.mongo/repositories/inventory.repo'
+
 type productRegistryType = { [key: string]: any }
 //
 interface getAllProductType {
@@ -34,15 +43,22 @@ class ProductFactory {
    async publicProductByShop(shop_id: string, product_id: string) {
       return await publicProductByShop(shop_id, product_id)
    }
+   // PATCH
    // GET
+   async searchProduct(keySearch: string) {
+      return await searchProduct(keySearch)
+   }
+   //
    async findAllDaftForShop({ shop_id, skip = 0, limit = 0 }: { shop_id: string | undefined; skip: number; limit: number }) {
       const query = { shop_id, isDaft: true }
       return await findAllDaftForShop({ query, skip, limit })
    }
+   //
    async findAllPublicForShop({ shop_id, skip = 0, limit = 0 }: { shop_id: string | undefined; skip: number; limit: number }) {
       const query = { shop_id, isPublic: true }
       return await findAllPublicForShop({ query, skip, limit })
    }
+   //
    async findAllProduct(query: any) {
       const {
          limit = 60,
@@ -73,6 +89,7 @@ class Product {
    isPublic: boolean
    product_rating: object | number
    product_variations: any
+   location: string
    constructor({
       name,
       type,
@@ -110,7 +127,21 @@ class Product {
    }
    // Create New Product
    async createProduct() {
-      return await ProductModel.create(this)
+      const product = await ProductModel.create(this)
+      if (product) {
+         const inventory = {
+            productId: product._id,
+            shopId: product.shop_id,
+            location: this.location,
+            stock: product.quantity,
+         }
+         await insertInvProduct(inventory)
+      }
+      return product
+   }
+   //
+   async updateProduct(productId: string, bodyUpdate: object) {
+      return await ProductModel.updateOne({ _id: new Types.ObjectId(productId) }, { $set: bodyUpdate }, { new: true })
    }
 }
 
@@ -118,7 +149,6 @@ class Clothing extends Product {
    async createProduct() {
       if (!this.attributes) throw new BadRequestError('Missing Attributes')
       const newProduct = await super.createProduct()
-      console.log(newProduct)
       if (!newProduct) throw new BadRequestError('Failed Create  Product!')
       //
       const newClothing = await ClothingModel.create({
@@ -130,12 +160,15 @@ class Clothing extends Product {
       //
       return newProduct
    }
+   // UPDATE
+   // async updateProduct(productId: string, bodyUpdate: object) {
+
+   // }
 }
 class Electronic extends Product {
    async createProduct() {
       if (!this.attributes) throw new BadRequestError('Missing Attributes')
       const newProduct = await super.createProduct()
-      console.log(newProduct)
       if (!newProduct) throw new BadRequestError('Failed Create  Product!')
       //
       const newElectronic = await ElectronicModel.create({
@@ -152,7 +185,6 @@ class Furniture extends Product {
    async createProduct() {
       if (!this.attributes) throw new BadRequestError('Missing Attributes')
       const newProduct = await super.createProduct()
-      console.log(newProduct)
       if (!newProduct) throw new BadRequestError('Failed Create  Product!')
       //
       const newFurniture = await FurnitureModel.create({

@@ -98,6 +98,8 @@ const productSchema = new Schema<ProductDocument>(
       timestamps: true,
    }
 )
+// CREATE INDEX ON PRODUCT
+productSchema.index({ name: 'text', description: 'text' })
 //
 productSchema.pre('save', function (next) {
    this.product_slug = slugify(this.name, { lower: true })

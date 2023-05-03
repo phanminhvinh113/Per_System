@@ -1,0 +1,86 @@
+import mongoose, { Schema } from 'mongoose' // Erase if already required
+
+// Declare the Schema of the Mongo model
+const discountSchema = new mongoose.Schema(
+   {
+      shop_id: {
+         type: Schema.Types.ObjectId,
+         ref: 'User',
+      },
+
+      name: {
+         type: String,
+         required: true,
+      },
+      description: {
+         type: String,
+         require: true,
+      },
+      type: {
+         type: String,
+         require: true,
+         default: 'fixed amount',
+      },
+      value: {
+         type: String,
+         require: true,
+      },
+      code: {
+         type: String,
+         require: true,
+      },
+      start_date: {
+         type: Date,
+         require: true,
+      },
+      end_date: {
+         type: Date,
+         require: true,
+      },
+      max_quantity: {
+         type: Number,
+         require: true,
+      },
+      amount_user_used: {
+         type: Number,
+         require: true,
+         default: 0,
+      },
+      maximum_amount_per_user: {
+         type: Number,
+         require: true,
+      },
+      user_used: {
+         type: Array,
+         default: [],
+      },
+      min_order_value: {
+         type: Number,
+         require: true,
+      },
+      is_active: {
+         type: Boolean,
+         require: true,
+         default: false,
+      },
+      apply_to_products: {
+         type: String,
+         require: true,
+         enum: ['all', 'special'],
+      },
+      product_ids: {
+         type: Array,
+
+         default: [],
+         require: true,
+         ref: 'Product',
+      },
+   },
+   {
+      collection: '_Discount',
+      timestamps: true,
+   }
+)
+
+//Export the model
+export const discountModel = mongoose.model('Discount', discountSchema)

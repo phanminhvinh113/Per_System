@@ -7,7 +7,6 @@ class ProductController {
    createProduct = async (req: Request, res: Response) => {
       try {
          //
-         console.log(req.User?.userId)
          const payload = { ...req.body, shop_id: req.User?.userId }
          const type: string = req.body?.type
          //
@@ -83,6 +82,20 @@ class ProductController {
    findAllProducts = async (req: Request, res: Response) => {
       try {
          return res.status(201).json(await productService.findAllProduct(req.query))
+         //
+      } catch (error) {
+         return res.status(403).json({
+            code: -1,
+            status: error.status || 403,
+            message: error?.message,
+         })
+      }
+   }
+   //
+   searchProduct = async (req: Request, res: Response) => {
+      try {
+         const keySearch: any = req.query.q || ''
+         return res.status(201).json(await productService.searchProduct(keySearch))
          //
       } catch (error) {
          return res.status(403).json({
