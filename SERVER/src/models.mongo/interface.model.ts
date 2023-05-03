@@ -35,3 +35,21 @@ export interface FurnitureType {
    material: string
    shop_id: string | object
 }
+export interface DiscountType {
+   shop_id?: string
+   name?: string
+   description?: string
+   type: string
+   value: string
+   code: string
+   start_date: any
+   end_date: any
+   max_quantity: number
+   amount_user_used: number
+   maximum_amount_per_user: number
+   user_used?: string[] | number[] | object
+   min_order_value: number
+   is_active?: boolean
+   apply_to_products: string[] | object | string
+   product_ids: string[] | number[] | object
+}

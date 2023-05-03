@@ -1,7 +1,7 @@
 import { ProductType } from '../../models.mongo/interface.model'
 import { ProductModel, ClothingModel, ElectronicModel, FurnitureModel } from '../../models.mongo/product.model'
 import { BadRequestError } from '../../core/error.response'
-import { TypeProduct } from '../../utils/constant'
+import { StatusCode, TypeProduct } from '../../utils/constant'
 import {
    findAllDaftForShop,
    publicProductByShop,
@@ -68,7 +68,12 @@ class ProductFactory {
          select = ['name', 'thumb', 'price', 'description', 'discount'],
       }: getAllProductType = query
       //
-      return await findAllProduct({ limit, sort, filter, page, select })
+      return {
+         code: 0,
+         status: StatusCode.SUCCESS,
+         message: 'OK!',
+         data: await findAllProduct({ limit, sort, filter, page, select }),
+      }
    }
 }
 

@@ -41,16 +41,12 @@ export const publicProductByShop = async (shop_id: string, product_id: string) =
         }
 }
 export const findAllProduct = async ({ limit, sort, filter, page, select }: any) => {
+   //
    const skip: number = (page - 1) * limit
    const sortBy: any = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
    const products = await ProductModel.find(filter).skip(skip).sort(sortBy).limit(limit).select(getSelectData(select)).lean()
    //
-   return {
-      code: 0,
-      status: StatusCode.SUCCESS,
-      message: 'OK',
-      data: products ? products : [],
-   }
+   return products
 }
 export const searchProduct = async (keySearch: string) => {
    const regexSearch: any = new RegExp(keySearch)
