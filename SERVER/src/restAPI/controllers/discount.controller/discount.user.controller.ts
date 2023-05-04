@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import discountService from '../service/discount.service'
-class DiscountController {
+import discountUserService from '../../service/discount.service/discount.user.service'
+class DiscountShopController {
    createNewDiscount = async (req: Request, res: Response) => {
       try {
          const payload: any = req.body
-         return res.status(201).json(await discountService.createDiscountCode(payload))
+         return res.status(201).json(await discountUserService.cancelDiscountCode(payload))
          //
       } catch (error) {
          return res.status(403).json({
@@ -15,4 +15,4 @@ class DiscountController {
       }
    }
 }
-export default new DiscountController()
+export default new DiscountShopController()

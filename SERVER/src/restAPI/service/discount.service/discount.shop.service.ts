@@ -1,12 +1,24 @@
-import { discountModel } from '../../models.mongo/discount.model'
-import { BadRequestError, ConflictRequestError, NotFoundError } from '../../core/error.response'
-import { DiscountType } from '../../models.mongo/interface.model'
+import { discountModel } from '../../../models.mongo/discount.model'
+import { BadRequestError, ConflictRequestError, NotFoundError } from '../../../core/error.response'
+import { DiscountType, ProductType } from '../../../models.mongo/interface.model'
 import { Types } from 'mongoose'
-import { StatusCode } from '../../utils/constant'
-import { findAllProduct } from '../../models.mongo/repositories/product.repo'
-import { findAllDiscountCodeUnSelect } from '../../models.mongo/repositories/discount.repo'
-
-class DiscountService {
+import { StatusCode } from '../../../utils/constant'
+import { findAllProduct } from '../../../models.mongo/repositories/product.repo'
+import { checkDiscountExist, findAllDiscountCodeUnSelect } from '../../../models.mongo/repositories/discount.repo'
+import { User } from '../../interface/index.interface'
+import { HistoryDiscountModel } from '../../../models.mongo/history.discount.model'
+//
+interface DiscountServiceType {
+   code: string
+   shopId: string
+   products: ProductType[]
+   page: number
+   limit: number
+   userId: string
+   discount_id: string
+}
+//
+class DiscountShopService {
    async createDiscountCode(payload: DiscountType) {
       const {
          code,
@@ -28,7 +40,7 @@ class DiscountService {
       if (new Date() > new Date(start_date) || new Date() > new Date(end_date) || new Date(start_date) >= new Date(end_date)) {
          throw new BadRequestError('Wrong Time For Discount!')
       }
-      const foundDiscount = await discountModel.findOne({ code, shop_id: new Types.ObjectId(shop_id) }).lean()
+      const foundDiscount = await discountModel.findOne({ code, shop_id }).lean()
       if (foundDiscount && foundDiscount.is_active) throw new BadRequestError(' Discount Is Active!')
       //
       const newDiscount = await discountModel.create({
@@ -57,10 +69,10 @@ class DiscountService {
       }
    }
    async updateDiscountCode() {}
-   async getAllDiscountCodeWithProduct(payload: any) {
-      const { code, shopId, limit, page }: { code: string; shopId: string; limit: number; page: number } = payload
+   async getAllDiscountCodeWithProduct(payload: DiscountServiceType) {
+      const { code, shopId, limit, page, discount_id } = payload
       //
-      const findDiscount: DiscountType = await discountModel.find({ code, shop_id: new Types.ObjectId(shopId) }).lean()
+      const findDiscount: DiscountType | null = await checkDiscountExist({ code, shop_id: shopId, discount_id })
       if (!findDiscount || !findDiscount.is_active) throw new NotFoundError("Discount Doesn't Exist!")
       //
       const { apply_to_products, product_ids } = findDiscount
@@ -112,6 +124,33 @@ class DiscountService {
          throw new Error(error)
       }
    }
+   //DELETE DISCOUNT
+   // BEST WAY IS MOVE ON TO ANOTHER DB
+   async deleteDiscountCode({ code, shopId, discount_id }: DiscountServiceType) {
+      //
+      const foundDiscount = await checkDiscountExist({ code, shop_id: shopId, discount_id })
+      if (!foundDiscount) throw new NotFoundError('Not Found Discount!')
+      //CHECK SOMETHING BEFORE DELETE AND MOVE ON DIFF DATABASE
+      // .....................
+      // DELETE
+      const deleted = await discountModel
+         .findByIdAndDelete({
+            code,
+            _id: new Types.ObjectId(discount_id),
+            shop_id: shopId,
+         })
+         .lean()
+      if (!deleted) throw new NotFoundError('Can not delete Discount!')
+      //MOVE ON
+      const history_discount = await HistoryDiscountModel.create(foundDiscount)
+      if (!history_discount) throw new ConflictRequestError('Some thing Wrong! try again!', StatusCode.CONFLICT)
+      //
+      return {
+         code: 0,
+         status: StatusCode.SUCCESS,
+         message: 'DELETED!',
+      }
+   }
 }
 //
-export default new DiscountService()
+export default new DiscountShopService()

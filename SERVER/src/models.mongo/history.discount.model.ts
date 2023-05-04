@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose' // Erase if already required
 import { DiscountType } from './interface.model'
 
 // Declare the Schema of the Mongo model
-const discountSchema = new mongoose.Schema<DiscountType>(
+const historyDiscountSchema = new mongoose.Schema<DiscountType>(
    {
       shop_id: { type: Schema.Types.ObjectId, ref: 'User', require: true },
       name: { type: String, required: true },
@@ -17,15 +17,15 @@ const discountSchema = new mongoose.Schema<DiscountType>(
       maximum_amount_per_user: { type: Number, require: true },
       user_used: { type: Array, default: [] },
       min_order_value: { type: Number, require: true },
-      is_active: { type: Boolean, require: true, default: false },
+      is_active: false,
       apply_to_products: { type: String, require: true, enum: ['all', 'specific'] },
       product_ids: { type: Array, default: [], require: true, ref: 'Product' },
    },
    {
-      collection: '_Discount',
+      collection: 'History_Discount',
       timestamps: true,
    }
 )
 
 //Export the model
-export const discountModel = mongoose.model<DiscountType>('Discount', discountSchema)
+export const HistoryDiscountModel = mongoose.model<DiscountType>('Discount', historyDiscountSchema)

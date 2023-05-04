@@ -1,3 +1,6 @@
+import { Types } from 'mongoose'
+import { User } from '../restAPI/interface/index.interface'
+
 export interface ProductType {
    name: string
    type: string[] | string
@@ -35,21 +38,38 @@ export interface FurnitureType {
    material: string
    shop_id: string | object
 }
+export interface DiscountUserUsed {
+   user_id: string
+   amount: number
+}
 export interface DiscountType {
-   shop_id?: string
-   name?: string
-   description?: string
+   _id: object | string
+   shop_id: string | object
+   name: string
+   description: string
    type: string
-   value: string
+   value: string | number
    code: string
    start_date: any
    end_date: any
    max_quantity: number
    amount_user_used: number
    maximum_amount_per_user: number
-   user_used?: string[] | number[] | object
+   user_used: DiscountUserUsed[] | object
    min_order_value: number
-   is_active?: boolean
+   is_active: boolean
    apply_to_products: string[] | object | string
    product_ids: string[] | number[] | object
+}
+export interface CartProductType {
+   product_id: Types.ObjectId | string
+   shop_id: Types.ObjectId | string
+   quantity: number
+}
+export interface CartType {
+   cart_state: string
+   cart_products: CartProductType[]
+   cart_quantity: number
+   cart_count_product: number
+   cart_userId: object | string
 }
