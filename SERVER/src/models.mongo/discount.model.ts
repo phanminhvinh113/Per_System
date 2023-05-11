@@ -17,7 +17,7 @@ const discountSchema = new mongoose.Schema<DiscountType>(
       maximum_amount_per_user: { type: Number, require: true },
       user_used: { type: Array, default: [] },
       min_order_value: { type: Number, require: true },
-      is_active: { type: Boolean, require: true, default: false },
+      is_active: { type: Boolean, default: true },
       apply_to_products: { type: String, require: true, enum: ['all', 'specific'] },
       product_ids: { type: Array, default: [], require: true, ref: 'Product' },
    },

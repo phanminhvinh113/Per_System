@@ -43,7 +43,7 @@ export const TrackingDevice = async (userId: string | undefined, IP_Device: stri
    const _user: User | null = await keyTokenModel.findOne({ user: userId }).lean()
    return {
       Ip_Device: _user?.IP_Device === IP_Device ? Track_Device.IP_OLD : Track_Device.IP_NEW,
-      Deivce: _user?.Device === Device ? Track_Device.DEVICE_OLD : Track_Device.DEVICE_NEW,
+      Device: _user?.Device === Device ? Track_Device.DEVICE_OLD : Track_Device.DEVICE_NEW,
       Device_name: Device,
    }
 }

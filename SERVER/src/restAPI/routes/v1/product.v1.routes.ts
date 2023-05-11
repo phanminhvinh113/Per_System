@@ -7,9 +7,9 @@ import { Authentication } from '../../../auth/auth.utils'
 const route = express.Router()
 //
 route.get('/search', asyncHandler(productController.searchProduct))
-route.get('/', asyncHandler(productController.findAllProducts))
+route.get('/all', asyncHandler(productController.findAllProducts))
 //
-route.use(Authentication)
+route.use('/', Authentication)
 route.post('/new_product', asyncHandler(productController.createProduct))
 route.post('/publish', asyncHandler(productController.publicProductByShop))
 // QUERY

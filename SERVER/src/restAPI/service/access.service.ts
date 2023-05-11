@@ -89,7 +89,7 @@ class accessService {
             //  CREATE TOKENS
             const tokens: any = await createTokenPair({ userId: _user._id, email: _user.email, name: _user.name }, publicKey, privateKey)
             //  CHECK _KeyTokens
-            if (!tokens) throw new ConflictRequestError('Failed Loggin!')
+            if (!tokens) throw new ConflictRequestError('Failed Login!')
             //SAVE TOKEN AND SEND TO USER
             if (tokens) {
                // UPDATE OR CREATE REFRESH TOKEN
@@ -129,7 +129,7 @@ class accessService {
                }),
                KeyTokenService.removeKeyToken(keyStore._id),
             ]
-            const [result, delkeyResult] = await Promise.all(checkUserAndDelKey)
+            const [result, deleteKeyResult] = await Promise.all(checkUserAndDelKey)
             //
             if (!result) throw new AuthFailedError('Invalid User(DB)!')
             //
@@ -138,7 +138,7 @@ class accessService {
                status: StatusCode.SUCCESS,
                message: 'Log Out Success!',
                data: {
-                  acknowledge: delkeyResult ? true : false,
+                  acknowledge: deleteKeyResult ? true : false,
                   deletedCount: 1,
                },
             })
@@ -166,7 +166,7 @@ class accessService {
             if (!holderToken) throw new AuthFailedError("User Isn't Register!")
             const { email, userId, name, privateKey } = await VerifyToken(refreshToken, holderToken.publicKey)
 
-            //Check Infor Of User
+            //Check Information Of User
             const user = await findUserByInfo({ _id: userId, email })
             if (!user) throw new AuthFailedError('Unauthorized User(User Does not Exist)!')
             // Create New Pair Token

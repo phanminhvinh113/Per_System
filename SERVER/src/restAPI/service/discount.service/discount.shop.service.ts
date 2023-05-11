@@ -5,7 +5,6 @@ import { Types } from 'mongoose'
 import { StatusCode } from '../../../utils/constant'
 import { findAllProduct } from '../../../models.mongo/repositories/product.repo'
 import { checkDiscountExist, findAllDiscountCodeUnSelect } from '../../../models.mongo/repositories/discount.repo'
-import { User } from '../../interface/index.interface'
 import { HistoryDiscountModel } from '../../../models.mongo/history.discount.model'
 //
 interface DiscountServiceType {

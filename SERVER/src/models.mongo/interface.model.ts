@@ -1,5 +1,4 @@
 import { Types } from 'mongoose'
-import { User } from '../restAPI/interface/index.interface'
 
 export interface ProductType {
    name: string
@@ -10,7 +9,7 @@ export interface ProductType {
    isPublic: boolean
    price: number
    quantity: number
-   shop_id: object | string
+   shop_id: Types.ObjectId | string
    shop: string
    discount: number
    sold: number
@@ -24,27 +23,27 @@ export interface ClothingType {
    brand: string
    size_chart: object | string[] | number[]
    material: string
-   shop_id: object | string
+   shop_id: Types.ObjectId | string
 }
 export interface ElectronicType {
    manufactory: string
    size_chart: object | string[] | number[]
    material: string
-   shop_id: string | object
+   shop_id: string | Types.ObjectId
 }
 export interface FurnitureType {
    brand: string
    size_chart: object | string[] | number[]
    material: string
-   shop_id: string | object
+   shop_id: string | Types.ObjectId
 }
 export interface DiscountUserUsed {
-   user_id: string
+   user_id: Types.ObjectId | string
    amount: number
 }
 export interface DiscountType {
-   _id: object | string
-   shop_id: string | object
+   _id: Types.ObjectId | string
+   shop_id: string | Types.ObjectId
    name: string
    description: string
    type: string
@@ -59,12 +58,20 @@ export interface DiscountType {
    min_order_value: number
    is_active: boolean
    apply_to_products: string[] | object | string
-   product_ids: string[] | number[] | object
+   product_ids: string[] | object
 }
 export interface CartProductType {
    product_id: Types.ObjectId | string
-   shop_id: Types.ObjectId | string
+   shop_id?: Types.ObjectId | string
    quantity: number
+   old_quantity?: number
+   name?: string
+   description?: string
+   type?: string
+   thumb?: string
+   price?: number
+   discount?: number
+   type_commodity?: object
 }
 export interface CartType {
    cart_state: string

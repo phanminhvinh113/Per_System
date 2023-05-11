@@ -17,7 +17,7 @@ const historyDiscountSchema = new mongoose.Schema<DiscountType>(
       maximum_amount_per_user: { type: Number, require: true },
       user_used: { type: Array, default: [] },
       min_order_value: { type: Number, require: true },
-      is_active: false,
+      is_active: { type: Boolean, default: false },
       apply_to_products: { type: String, require: true, enum: ['all', 'specific'] },
       product_ids: { type: Array, default: [], require: true, ref: 'Product' },
    },
@@ -28,4 +28,4 @@ const historyDiscountSchema = new mongoose.Schema<DiscountType>(
 )
 
 //Export the model
-export const HistoryDiscountModel = mongoose.model<DiscountType>('Discount', historyDiscountSchema)
+export const HistoryDiscountModel = mongoose.model<DiscountType>('HistoryDiscount', historyDiscountSchema)

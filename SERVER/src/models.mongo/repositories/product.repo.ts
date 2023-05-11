@@ -2,7 +2,7 @@ import { Types } from 'mongoose'
 import { ProductModel } from '../product.model'
 import { BadRequestError, NotFoundError } from '../../core/error.response'
 import { StatusCode } from '../../utils/constant'
-import { getSelectData } from '../../utils/index.utils'
+import { getSelectData, unGetSelectData } from '../../utils/index.utils'
 
 //
 const queryProduct = async (query: object, skip: number, limit: number) => {
@@ -60,4 +60,8 @@ export const searchProduct = async (keySearch: string) => {
       message: 'OK',
       data: results,
    }
+}
+
+export const findProductById = async (productId: any, unselect: any) => {
+   return await ProductModel.findOne({ _id: new Types.ObjectId(productId) }, unGetSelectData(unselect)).lean()
 }
