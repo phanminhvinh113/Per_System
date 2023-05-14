@@ -3,6 +3,7 @@ import { ProductModel } from '../product.model'
 import { BadRequestError, NotFoundError } from '../../core/error.response'
 import { StatusCode } from '../../utils/constant'
 import { getSelectData, unGetSelectData } from '../../utils/index.utils'
+import { ProductType } from '../interface.model'
 
 //
 const queryProduct = async (query: object, skip: number, limit: number) => {
@@ -64,4 +65,19 @@ export const searchProduct = async (keySearch: string) => {
 
 export const findProductById = async (productId: any, unselect: any) => {
    return await ProductModel.findOne({ _id: new Types.ObjectId(productId) }, unGetSelectData(unselect)).lean()
+}
+
+export const checkProductByServer = async (products: ProductType[]) => {
+   return await Promise.all(
+      products.map(async (product: ProductType) => {
+         const foundProduct = await findProductById(product.productId, ['createdAt,updatedAt'])
+         if (foundProduct) {
+            return {
+               price: foundProduct.price,
+               quantity: product.quantity,
+               productId: foundProduct._id,
+            }
+         }
+      })
+   )
 }

@@ -1,7 +1,14 @@
 import { Types } from 'mongoose'
 import { unGetSelectData } from '../../utils/index.utils'
 import { discountModel } from '../discount.model'
-
+import { ProductType } from '../interface.model'
+//
+interface DiscountRepoType {
+   code: string
+   shopId: string
+   discountId: string
+   // products?: ProductType[]
+}
 export const findAllDiscountCodeUnSelect = async ({ limit, sort, page, filter, unselect }: any) => {
    //
    const skip: number = (page - 1) * limit
@@ -11,12 +18,12 @@ export const findAllDiscountCodeUnSelect = async ({ limit, sort, page, filter, u
    return discounts
 }
 
-export const checkDiscountExist = async ({ code, shop_id, discount_id }: { code: string; shop_id: string; discount_id: string }) => {
+export const checkDiscountExist = async ({ code, shopId, discountId }: DiscountRepoType) => {
    return await discountModel
       .findOne({
-         _id: new Types.ObjectId(discount_id),
+         _id: new Types.ObjectId(discountId),
          code,
-         shop_id: new Types.ObjectId(shop_id),
+         shop_id: new Types.ObjectId(shopId),
       })
       .lean()
 }

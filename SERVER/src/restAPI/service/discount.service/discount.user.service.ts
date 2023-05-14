@@ -12,13 +12,13 @@ interface DiscountServiceType {
    page: number
    limit: number
    userId: string
-   discount_id: string
+   discountId: string
    _id: string
 }
 //
 class DiscountUserService {
-   async getDiscountAmountByUser({ code, shopId, userId, products, discount_id }: DiscountServiceType) {
-      const foundDiscount: DiscountType | null = await checkDiscountExist({ code, shop_id: shopId, discount_id })
+   async getDiscountAmountByUser({ code, shopId, userId, products, discountId }: DiscountServiceType) {
+      const foundDiscount: DiscountType | null = await checkDiscountExist({ code, shopId, discountId })
       if (!foundDiscount) throw new NotFoundError('Not Found Discount!')
       //
       const { is_active, max_quantity, start_date, end_date, min_order_value, maximum_amount_per_user, user_used, type, value, amount_user_used } =
@@ -40,7 +40,7 @@ class DiscountUserService {
       if (userUsesDiscount && userUsesDiscount?.amount > maximum_amount_per_user) throw new ForbiddenError('Exceed the amount allowed for use')
       if (userUsesDiscount && userUsesDiscount.amount < max_quantity) {
          await discountModel.updateOne(
-            { _id: discount_id, code, shop_id: shopId, user_used: { $eleMatch: { user_id: userId } } },
+            { _id: discountId, code, shop_id: shopId, user_used: { $eleMatch: { user_id: userId } } },
             { $inc: { 'user_used.$.amount': 1 } },
             function (err: any) {
                throw new ConflictRequestError(`${err}`)
@@ -83,8 +83,8 @@ class DiscountUserService {
       //
    }
    // CANCEL
-   async cancelDiscountCode({ code, shopId, discount_id, userId }: DiscountServiceType) {
-      const foundDiscount = await checkDiscountExist({ code, shop_id: shopId, discount_id })
+   async cancelDiscountCode({ code, shopId, discountId, userId }: DiscountServiceType) {
+      const foundDiscount = await checkDiscountExist({ code, shopId, discountId })
       if (!foundDiscount) throw new NotFoundError('Not Found Discount!')
       const result = await discountModel.findByIdAndUpdate(foundDiscount._id, {
          $push: {

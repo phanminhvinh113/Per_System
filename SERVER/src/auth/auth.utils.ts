@@ -12,7 +12,7 @@ export const createTokenPair = async (payload: object, _publicKey: string, priva
          algorithm: 'RS256',
          expiresIn: '1 days',
       })
-      //refrash token
+      //refresh token
       const refreshToken = JWT.sign({ ...payload, privateKey }, privateKey, {
          algorithm: 'RS256',
          expiresIn: '30 days',
@@ -21,7 +21,7 @@ export const createTokenPair = async (payload: object, _publicKey: string, priva
       return accessToken && refreshToken ? { accessToken, refreshToken } : { accessToken: null, refreshToken: null }
       //
    } catch (error) {
-      return Error('Error Genarate Token')
+      return Error('Error Generate Token')
    }
 }
 

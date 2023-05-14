@@ -56,3 +56,10 @@ export const findCartUserAndUpdate = async ({ userId, product }: CartServiceType
    }
    return result
 }
+export const findCartId = async (userId: string, cartId: string) => {
+   return await cartModel.findOne({
+      cart_userId: new Types.ObjectId(userId),
+      _id: new Types.ObjectId(cartId),
+      cart_state: 'active',
+   })
+}

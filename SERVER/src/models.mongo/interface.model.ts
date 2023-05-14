@@ -1,6 +1,7 @@
 import { Types } from 'mongoose'
 
 export interface ProductType {
+   productId: string | Types.ObjectId
    name: string
    type: string[] | string
    thumb: string
@@ -43,6 +44,7 @@ export interface DiscountUserUsed {
 }
 export interface DiscountType {
    _id: Types.ObjectId | string
+   code_id: Types.ObjectId | string
    shop_id: string | Types.ObjectId
    name: string
    description: string

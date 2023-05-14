@@ -131,7 +131,7 @@ class accessService {
             ]
             const [result, deleteKeyResult] = await Promise.all(checkUserAndDelKey)
             //
-            if (!result) throw new AuthFailedError('Invalid User(DB)!')
+            if (!result || !deleteKeyResult) throw new AuthFailedError('Invalid User(DB)!')
             //
             return resolve({
                code: 0,

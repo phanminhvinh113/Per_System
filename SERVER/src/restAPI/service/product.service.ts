@@ -78,23 +78,23 @@ class ProductFactory {
 }
 
 class Product {
-   name: string
-   type: string[] | string
-   thumb: string
-   description: string
-   price: number
-   quantity: number
-   shop: string
-   shop_id: string | number | object
-   discount: number
-   sold: number
-   stock: number
-   attributes: object
-   isDaft: boolean
-   isPublic: boolean
-   product_rating: object | number
-   product_variations: any
-   location: string
+   protected name: string
+   protected type: string[] | string
+   protected thumb: string
+   protected description: string
+   protected price: number
+   protected quantity: number
+   protected shop: string
+   protected shop_id: string | number | object
+   protected discount: number
+   protected sold: number
+   protected stock: number
+   protected attributes: object
+   protected isDaft: boolean
+   protected isPublic: boolean
+   protected product_rating: object | number
+   protected product_variations: any
+   protected location: string
    constructor({
       name,
       type,

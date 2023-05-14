@@ -6,13 +6,13 @@ export const ROLES = Object.freeze({
 
 export const STATE_USER = Object.freeze({
    ACTIVE: 'active',
-   UN_ACTIVE: 'unactive',
+   UN_ACTIVE: 'inactive',
 })
 
 export const StatusCode = Object.freeze({
    //ERROR STATUS CODE
    BAD_REQUEST: 400,
-   UNATHORIZED: 401,
+   UNAUTHORIZED: 401,
    FORBIDDEN: 403,
    NOT_FOUND: 404,
    CONFLICT: 409,
@@ -23,9 +23,9 @@ export const StatusCode = Object.freeze({
    COMPLETED: 201,
 })
 export const ReasonStatusCode = Object.freeze({
-   //ERRROR
+   //ERROR
    BAD_REQUEST: '	Bad Request',
-   UNATHORIZED: 'Unauthorized',
+   UNAUTHORIZED: 'Unauthorized',
    FORBIDDEN: 'Forbidden',
    NOT_FOUND: 'Not Found',
    CONFLICT: 'Conflict Error',

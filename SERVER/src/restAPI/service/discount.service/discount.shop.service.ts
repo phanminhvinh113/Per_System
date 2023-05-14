@@ -14,7 +14,7 @@ interface DiscountServiceType {
    page: number
    limit: number
    userId: string
-   discount_id: string
+   discountId: string
 }
 //
 class DiscountShopService {
@@ -69,9 +69,9 @@ class DiscountShopService {
    }
    async updateDiscountCode() {}
    async getAllDiscountCodeWithProduct(payload: DiscountServiceType) {
-      const { code, shopId, limit, page, discount_id } = payload
+      const { code, shopId, limit, page, discountId } = payload
       //
-      const findDiscount: DiscountType | null = await checkDiscountExist({ code, shop_id: shopId, discount_id })
+      const findDiscount: DiscountType | null = await checkDiscountExist({ code, shopId, discountId })
       if (!findDiscount || !findDiscount.is_active) throw new NotFoundError("Discount Doesn't Exist!")
       //
       const { apply_to_products, product_ids } = findDiscount
@@ -125,9 +125,9 @@ class DiscountShopService {
    }
    //DELETE DISCOUNT
    // BEST WAY IS MOVE ON TO ANOTHER DB
-   async deleteDiscountCode({ code, shopId, discount_id }: DiscountServiceType) {
+   async deleteDiscountCode({ code, shopId, discountId }: DiscountServiceType) {
       //
-      const foundDiscount = await checkDiscountExist({ code, shop_id: shopId, discount_id })
+      const foundDiscount = await checkDiscountExist({ code, shopId, discountId })
       if (!foundDiscount) throw new NotFoundError('Not Found Discount!')
       //CHECK SOMETHING BEFORE DELETE AND MOVE ON DIFF DATABASE
       // .....................
@@ -135,7 +135,7 @@ class DiscountShopService {
       const deleted = await discountModel
          .findByIdAndDelete({
             code,
-            _id: new Types.ObjectId(discount_id),
+            _id: new Types.ObjectId(discountId),
             shop_id: shopId,
          })
          .lean()

@@ -110,7 +110,7 @@ class CartService {
       }
    }
    //
-   async getListCartItem({ userId }: CartServiceType) {
+   async getListCartItem({ userId }: { userId: string }) {
       return await cartModel.findOne({ cart_userId: new Types.ObjectId(userId) }).lean()
    }
 }
