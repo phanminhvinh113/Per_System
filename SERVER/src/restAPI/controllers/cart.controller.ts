@@ -58,7 +58,6 @@ class CartController {
    getListCartItem = async (req: Request, res: Response) => {
       try {
          const userId: string = req.User?.userId || ''
-
          return res.status(201).json(await cartService.getListCartItem({ userId }))
       } catch (error) {
          return res.status(403).json({

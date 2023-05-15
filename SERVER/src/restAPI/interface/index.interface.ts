@@ -32,6 +32,7 @@ export interface UserLogin extends DeviceUser {
    password: string
    name?: string
    _refreshToken?: string
+   roles: string[]
 }
 // export interface UserLogOut {
 //    keyStore: UserKeyModel | undefined | null

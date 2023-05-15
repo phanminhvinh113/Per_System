@@ -5,6 +5,7 @@ import { ClothingType, ProductType, ElectronicType, FurnitureType } from './inte
 
 //
 interface ProductDocument extends ProductType, Document {}
+
 // Declare the Schema of the Mongo model
 const productSchema = new Schema<ProductDocument>(
    {
@@ -30,6 +31,7 @@ const productSchema = new Schema<ProductDocument>(
       quantity: {
          type: Number,
          require: true,
+         default: 0,
       },
       shop: String,
       shop_id: {
@@ -37,7 +39,10 @@ const productSchema = new Schema<ProductDocument>(
          ref: 'User',
          require: true,
       },
-      discount: Number,
+      discount: {
+         type: Number,
+         default: 0,
+      },
       sold: {
          type: Number,
          require: true,
@@ -54,7 +59,7 @@ const productSchema = new Schema<ProductDocument>(
             type: Number,
             default: 0,
          },
-         //set: (val: number) => Math.round(val * 10) / 10,
+
          rating_1_star: {
             type: Number,
             default: 0,

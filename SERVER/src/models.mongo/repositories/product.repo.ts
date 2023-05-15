@@ -70,14 +70,14 @@ export const findProductById = async (productId: any, unselect: any) => {
 export const checkProductByServer = async (products: ProductType[]) => {
    return await Promise.all(
       products.map(async (product: ProductType) => {
-         const foundProduct = await findProductById(product.productId, ['createdAt,updatedAt'])
-         if (foundProduct) {
-            return {
-               price: foundProduct.price,
-               quantity: product.quantity,
-               productId: foundProduct._id,
-            }
-         }
+         const foundProduct: any = await findProductById(product.productId, ['createdAt,updatedAt'])
+         return foundProduct
+            ? {
+                 price: foundProduct.price,
+                 quantity: product.quantity,
+                 productId: product.productId,
+              }
+            : null
       })
    )
 }

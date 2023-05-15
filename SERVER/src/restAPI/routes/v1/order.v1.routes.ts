@@ -1,0 +1,12 @@
+import express from 'express'
+import { asyncHandler } from '../../../helpers/asyncHandler'
+import checkoutController from '../../../restAPI/controllers/checkout.controller'
+import { Authentication } from '../../../auth/auth.utils'
+
+//
+const route = express.Router()
+//
+route.use('/', Authentication)
+route.post('/review', asyncHandler(checkoutController.checkoutReview))
+//
+module.exports = route

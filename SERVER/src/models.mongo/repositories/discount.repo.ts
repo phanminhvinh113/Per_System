@@ -1,7 +1,6 @@
 import { Types } from 'mongoose'
 import { unGetSelectData } from '../../utils/index.utils'
 import { discountModel } from '../discount.model'
-import { ProductType } from '../interface.model'
 //
 interface DiscountRepoType {
    code: string

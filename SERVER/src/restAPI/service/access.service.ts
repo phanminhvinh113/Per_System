@@ -9,6 +9,8 @@ import { getInfoData } from '../../utils/index.utils'
 import { BadRequestError, AuthFailedError, ConflictRequestError, ForbiddenError } from '../../core/error.response'
 import { TrackingDevice, checkExistUser, findUserByInfo, findUserByUserName, generateKeyPair } from './user.service'
 import keyTokenService from './keyToken.service'
+import { findUserById } from '../../models.mongo/repositories/user.repo'
+import { Types } from 'mongoose'
 //
 class accessService {
    // REGISTER
@@ -70,6 +72,66 @@ class accessService {
             return reject(error)
          }
       })
+   //
+   registerSellerService = ({ userId, password, IP_Device, Device }: User) =>
+      new Promise(async (resolve, reject) => {
+         try {
+            // ERROR
+            if (!userId || !password) throw new Error('Missing Parameter')
+            //Check User Exist
+            const _user: any = await findUserById(userId)
+            if (!_user) throw new BadRequestError('Error:User not already!')
+            //Check Account Register Seller
+            if (_user.roles.includes(ROLES.SELLER)) throw new BadRequestError('The account has been registered as a seller')
+            //Check Password
+            const matchPassword = bcrypt.compareSync(password, _user.password)
+            if (!matchPassword) throw new AuthFailedError('Incorrect Password:X_01')
+            //Update User
+            const new_seller = await UserModel.findOneAndUpdate({ _id: new Types.ObjectId(userId) }, { $push: { roles: ROLES.SELLER } })
+
+            // ERROR CREATE NEW USER
+            if (!new_seller) throw new Error('Failed!')
+            // CREATE PRIVATE AND PUBLIC KEY
+            const { privateKey, publicKey } = await generateKeyPair()
+            // SAVE PUBLIC TO DATABASE
+            const publicKeyString = await KeyTokenService.createKeyToken({
+               userId: new_seller._id,
+               publicKey,
+               IP_Device,
+               Device,
+            })
+            //
+            if (!publicKeyString) throw new Error('PublicKey Error!')
+            // CREATE TOKENS
+            console.log('roles:::', new_seller.roles)
+            const new_roles = Array.isArray(new_seller.roles) ? new_seller.roles.push(ROLES.SELLER) : new_seller.roles
+            console.log('new roles:::', new_roles)
+            const tokens = await createTokenPair({ userId: new_seller._id, roles: new_roles }, publicKey, privateKey)
+            if (tokens) {
+               return resolve({
+                  code: 0,
+                  status: 201,
+                  message: 'OK!',
+                  data: {
+                     user: getInfoData(['name', 'roles', 'email', 'verify', 'status'], new_seller),
+                     tokens,
+                  },
+               })
+            }
+            if (!token) {
+               return resolve({
+                  code: 0,
+                  status: 200,
+                  message: 'Failed!',
+                  data: null,
+               })
+            }
+            //
+         } catch (error) {
+            console.log(error)
+            return reject(error)
+         }
+      })
    // LOGIN
    Login = ({ _userName, password, IP_Device, Device }: UserLogin) => {
       return new Promise(async (resolve, reject) => {
@@ -87,7 +149,11 @@ class accessService {
             //  CREATE KEY PRIVATE KEY AND PUBLIC KEY
             const { privateKey, publicKey } = await generateKeyPair()
             //  CREATE TOKENS
-            const tokens: any = await createTokenPair({ userId: _user._id, email: _user.email, name: _user.name }, publicKey, privateKey)
+            const tokens: any = await createTokenPair(
+               { userId: _user._id, email: _user.email, name: _user.name, roles: _user.roles },
+               publicKey,
+               privateKey
+            )
             //  CHECK _KeyTokens
             if (!tokens) throw new ConflictRequestError('Failed Login!')
             //SAVE TOKEN AND SEND TO USER

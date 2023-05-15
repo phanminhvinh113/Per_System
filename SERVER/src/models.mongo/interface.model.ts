@@ -56,11 +56,11 @@ export interface DiscountType {
    max_quantity: number
    amount_user_used: number
    maximum_amount_per_user: number
-   user_used: DiscountUserUsed[] | object
+   user_used: DiscountUserUsed[]
    min_order_value: number
    is_active: boolean
    apply_to_products: string[] | object | string
-   product_ids: string[] | object
+   product_ids: string[]
 }
 export interface CartProductType {
    product_id: Types.ObjectId | string

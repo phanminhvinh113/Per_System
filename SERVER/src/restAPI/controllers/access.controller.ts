@@ -20,6 +20,22 @@ class accessController {
          })
       }
    }
+   RegisterSeller = async (req: Request, res: Response) => {
+      try {
+         const IP_Device = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+         const Device = useragent.parse(req.headers['user-agent']).os.toString()
+         const userId = req.User?.userId || req.headers['x-client-id']
+         //
+         return res.status(201).json(await accessService.registerSellerService({ ...req.body, userId, IP_Device, Device }))
+         //
+      } catch (error) {
+         return res.status(403).json({
+            code: -1,
+            status: error.status,
+            message: error?.message,
+         })
+      }
+   }
    Login = async (req: Request, res: Response) => {
       try {
          const IP_Device: string | string[] | undefined = req.headers['x-forwarded-for'] || req.connection.remoteAddress

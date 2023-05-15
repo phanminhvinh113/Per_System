@@ -40,7 +40,9 @@ class DiscountShopService {
          throw new BadRequestError('Wrong Time For Discount!')
       }
       const foundDiscount = await discountModel.findOne({ code, shop_id }).lean()
-      if (foundDiscount && foundDiscount.is_active) throw new BadRequestError(' Discount Is Active!')
+      if (foundDiscount && foundDiscount.is_active) throw new BadRequestError('Discount Is Active!')
+      //
+      if (apply_to_products === 'specific' && !product_ids) throw new BadRequestError('Pick Product!')
       //
       const newDiscount = await discountModel.create({
          name,

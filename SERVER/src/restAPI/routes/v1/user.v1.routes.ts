@@ -9,6 +9,7 @@ route.post('/login', asyncHandler(accessController.Login))
 route.post('/refresh_token', asyncHandler(accessController.handleRefreshToken))
 //ROUTE NEED VERIFY
 route.use('/', Authentication)
+route.post('/register/seller', asyncHandler(accessController.RegisterSeller))
 route.post('/logout', asyncHandler(accessController.Logout))
 //
 module.exports = route
