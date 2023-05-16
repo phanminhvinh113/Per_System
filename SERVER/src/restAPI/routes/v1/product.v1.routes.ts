@@ -5,12 +5,13 @@ import { Authentication, AuthenticationSeller } from '../../../auth/auth.utils'
 
 //
 const route = express.Router()
-//
+//PUBLIC
 route.get('/search', asyncHandler(productController.searchProduct))
 route.get('/all', asyncHandler(productController.findAllProducts))
-//
+//SHOP
 route.use('/shop', AuthenticationSeller)
 route.post('/shop/new_product', asyncHandler(productController.createProduct))
+//USER(LOGIN)
 route.use('/', Authentication)
 route.post('/publish', asyncHandler(productController.publicProductByShop))
 // QUERY

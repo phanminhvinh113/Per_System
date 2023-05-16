@@ -1,6 +1,7 @@
 import { StatusCode } from '../../utils/constant'
 import { ConflictRequestError } from '../../core/error.response'
 import { inventoryModel } from '../inventory.model'
+import { Types } from 'mongoose'
 
 export const insertInvProduct = async ({
    productId,
@@ -26,4 +27,33 @@ export const insertInvProduct = async ({
       message: 'OK',
       data: inventory,
    }
+}
+
+export const reservationInventory = async ({
+   productId,
+   quantity,
+   cartId,
+}: {
+   productId: string | Types.ObjectId
+   quantity: number
+   cartId: string
+}) => {
+   return await inventoryModel.updateOne(
+      {
+         inv_productId: new Types.ObjectId(productId),
+         inv_stock: { $gte: +quantity },
+      },
+      {
+         $push: {
+            inv_reservation: { productId, cartId, quantity },
+         },
+         $inc: {
+            inv_stock: -quantity,
+         },
+      },
+      {
+         new: true,
+         upsert: true,
+      }
+   )
 }

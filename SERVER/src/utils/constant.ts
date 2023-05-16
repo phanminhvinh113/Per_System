@@ -63,3 +63,4 @@ export const TypeProduct = Object.freeze({
    Cosmetics: 'Cosmetics',
    Fashion: 'Fashion',
 })
+export const orderStatusEnum: string[] = ['pending', 'confirmed', 'shipped', 'cancelled']

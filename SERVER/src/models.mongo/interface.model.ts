@@ -82,3 +82,33 @@ export interface CartType {
    cart_count_product: number
    cart_userId: object | string
 }
+
+export interface orderModelType {
+   order_userId: string | object
+   order_checkout: orderCheckoutType
+   order_shipping: orderShippingType
+   order_products: orderProducts[]
+   order_payment: object
+   order_tracking: string
+   order_status: string
+}
+export interface orderCheckoutType {
+   totalPrice: number
+   totalApplyDiscount: number
+   feeShip: number
+}
+export interface orderShippingType {
+   street: string
+   village: string
+   commune: string
+   ward: string
+   district: string
+   city: string
+   country: string
+   state: string
+}
+export interface orderProducts {
+   productId: string
+   price: number
+   quantity: number
+}

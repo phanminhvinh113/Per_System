@@ -63,3 +63,15 @@ export const findCartId = async (userId: string, cartId: string) => {
       cart_state: 'active',
    })
 }
+
+export const removeProductsInCart = async ({ cartId, userId, productIds }: { cartId: string; userId: string; productIds: string[] }) => {
+   return await cartModel.updateOne(
+      {
+         _id: new Types.ObjectId(cartId),
+         cart_userId: new Types.ObjectId(userId),
+      },
+      {
+         $pullAll: { cart_products: { product_id: productIds } },
+      }
+   )
+}
