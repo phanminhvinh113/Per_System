@@ -1,6 +1,7 @@
-import { Types } from 'mongoose'
+import { ObjectId, Types } from 'mongoose'
 import cartModel from '../cart.model'
 import { CartProductType } from '../interface.model'
+import { ProductServeType } from '../../restAPI/interface/checkout.interface'
 
 //
 interface CartServiceType {
@@ -64,14 +65,23 @@ export const findCartId = async (userId: string, cartId: string) => {
    })
 }
 
-export const removeProductsInCart = async ({ cartId, userId, productIds }: { cartId: string; userId: string; productIds: string[] }) => {
+export const removeProductsInCart = async ({ cartId, userId, products }: { cartId: string; userId: string; products: ProductServeType[] }) => {
+   //
+   const productIds: (string | ObjectId)[] = products.flatMap((product) => product.productId.toString())
+   const quantity_cart: number = products.reduce((acc, product) => acc + product.quantity, 0)
+   const quantity_product: number = products.length || 0
+   //
    return await cartModel.updateOne(
       {
          _id: new Types.ObjectId(cartId),
          cart_userId: new Types.ObjectId(userId),
       },
       {
-         $pullAll: { cart_products: { product_id: productIds } },
+         $pull: { cart_products: { product_id: { $in: productIds } } },
+         $inc: {
+            cart_quantity: -quantity_cart,
+            cart_count_product: -quantity_product,
+         },
       }
    )
 }

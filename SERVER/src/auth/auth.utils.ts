@@ -36,7 +36,7 @@ export const VerifyToken = async (token: string, publicKey: string) => {
       return error
    }
 }
-
+// AUTH FOR USER
 export const Authentication = asyncHandler(async (req: Request, _res: Response, next: NextFunction) => {
    //1
    const userId: any = req.headers[HEADER.CLIENT_ID]
@@ -63,6 +63,7 @@ export const Authentication = asyncHandler(async (req: Request, _res: Response, 
    }
    //
 })
+// AUTH FOR SELLER OR SHOP
 export const AuthenticationSeller = asyncHandler(async (req: Request, _res: Response, next: NextFunction) => {
    //1
    const userId: any = req.headers[HEADER.CLIENT_ID]
@@ -76,8 +77,34 @@ export const AuthenticationSeller = asyncHandler(async (req: Request, _res: Resp
    //4
    try {
       const decodeJWT = await VerifyToken(accessToken, keyStore.publicKey)
-      console.log('decode::::', decodeJWT)
       if (decodeJWT.userId === userId && decodeJWT.roles?.includes(ROLES.SELLER)) {
+         //
+         req.keyStore = keyStore
+         req.User = decodeJWT
+         //
+         return next()
+      } else throw new AuthFailedError(decodeJWT.message || 'Unauthorized User')
+      //
+   } catch (error) {
+      throw error
+   }
+   //
+})
+// AUTH FOR ADMIN
+export const AuthenticationAdmin = asyncHandler(async (req: Request, _res: Response, next: NextFunction) => {
+   //1
+   const userId: any = req.headers[HEADER.CLIENT_ID]
+   if (!userId) throw new AuthFailedError('Invalid Request')
+   //2
+   const keyStore: any = await keyTokenService.findByUserId(userId)
+   if (!keyStore) throw new NotFoundError('Invalid Key Store!')
+   //3
+   const accessToken = req.headers[HEADER.AUTHORIZATION]
+   if (!accessToken) throw new AuthFailedError('Invalid Request(MS TOKEN)')
+   //4
+   try {
+      const decodeJWT = await VerifyToken(accessToken, keyStore.publicKey)
+      if (decodeJWT.userId === userId && decodeJWT.roles?.includes(ROLES.ADMIN)) {
          //
          req.keyStore = keyStore
          req.User = decodeJWT

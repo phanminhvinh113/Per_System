@@ -27,7 +27,7 @@ class CartService {
       //
       if (!findProduct) throw new NotFoundError('Not Found Item')
       //
-      const product_cart: any = { ...findProduct, ...product }
+      const product_cart: any = { ...product, ...findProduct }
       if (!cartUser) {
          const addCart = await cartModel.findOneAndUpdate(
             { cart_userId: userId },

@@ -59,7 +59,6 @@ const productSchema = new Schema<ProductDocument>(
             type: Number,
             default: 0,
          },
-
          rating_1_star: {
             type: Number,
             default: 0,

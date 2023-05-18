@@ -1,11 +1,14 @@
+import orderModel from '../../models.mongo/order.model'
+import { BadRequestError, ConflictRequestError, NotFoundError } from '../../core/error.response'
 import { findCartId, removeProductsInCart } from '../../models.mongo/repositories/cart.repo'
-import { BadRequestError, ConflictRequestError } from '../../core/error.response'
+import { getAllOrderByUser, getOneOrderByUser, updateStatusOrder } from '../../models.mongo/repositories/checkout.repo'
+import { ROLES, StatusCode, orderStatus } from '../../utils/constant'
+import { acquireLock, releaseLock } from './redis.service'
 import { checkProductByServer } from '../../models.mongo/repositories/product.repo'
-import { StatusCode } from '../../utils/constant'
 import discountUserService from './discount.service/discount.user.service'
 import { CheckoutServiceType, OrderByUserType, ProductServeType } from '../interface/checkout.interface'
-import { acquireLock } from './redis.service'
-import orderModel from '../../models.mongo/order.model'
+import { Types } from 'mongoose'
+import { findUserByRole } from './user.service'
 
 //
 class CheckoutService {
@@ -49,6 +52,7 @@ class CheckoutService {
                checkoutOrder.totalPrice += totalPrice
                //
                shop_orders_ids_new.push({
+                  shopId,
                   products: productServer,
                   totalCheckout,
                   discount,
@@ -83,21 +87,25 @@ class CheckoutService {
       //
       const { shop_orders_ids_new, checkoutOrder } = await this.CheckoutReview({ userId, cartId, shop_order_ids })
       //
+      console.log('product_available', shop_orders_ids_new)
       // Check Again , Check to see if the product is still in stock!!!
-      const products: ProductServeType[] = shop_orders_ids_new.flatMap((order) => order.item_products)
+      const products: ProductServeType[] = shop_orders_ids_new.flatMap((order) => order.products)
+      //
       console.log('PRODUCT::::', products)
       //
-      const acquireProduct: Boolean[] = []
+      const acquireProduct: boolean[] = []
       //
-      if (!products || !products.length) throw new ConflictRequestError('Order Error!')
+      if (!products || !products?.length) throw new ConflictRequestError('Order Error!')
+      //
+      let keyLock: string = ''
       //
       for (let i = 0; i < products.length; i++) {
          const { productId, quantity } = products[i]
-         //
-         const keyLock = await acquireLock(productId, quantity, cartId)
+         keyLock = await acquireLock(productId, quantity, cartId)
          acquireProduct.push(keyLock ? true : false)
       }
       //If there exists an out-of-stock product
+      //
       if (acquireProduct.includes(false)) throw new BadRequestError('Some Products Updated!, Please Back To Cart')
       //Add Into Order
       const new_order = await orderModel.create({
@@ -111,13 +119,14 @@ class CheckoutService {
       //
       if (!new_order) throw new ConflictRequestError('Error Order! Check Again!')
       // Remove Product In Carts
-
-      const productIds: any[] = products.flatMap((product) => product.productId)
+      const remove_products = await removeProductsInCart({ userId, cartId, products })
       //
-      console.log('product ids :::', productIds)
-      const remove_products = await removeProductsInCart({ userId, cartId, productIds })
-
       if (!remove_products.modifiedCount || !remove_products) throw new ConflictRequestError('Cannot Order, Please Try Again!')
+      //
+      if (remove_products && remove_products.modifiedCount) {
+         const result_release = await releaseLock(keyLock)
+         if (!result_release) throw new ConflictRequestError('Config Order!')
+      }
       //
       return {
          code: 0,
@@ -126,14 +135,77 @@ class CheckoutService {
       }
    }
    // USER //
-   public async getOrderByUser() {}
+   public async getOrderByUser(userId: string) {
+      if (!userId) throw new BadRequestError('Missing User!')
+      // FIND ALL PRODUCT ORDER BY USER
+      const order = await getAllOrderByUser(userId)
+      // ERROR WHEN NOT FOUND
+      if (!order) throw new NotFoundError('Not Found!')
+      //RES
+      return {
+         code: 0,
+         status: StatusCode.SUCCESS,
+         data: order,
+      }
+   }
+   // USER //
+   public async getOneOrderByUser(userId: string, orderId: string) {
+      //
+      if (!userId) throw new BadRequestError('Missing User!')
+      // FIND ALL PRODUCT ORDER BY USER
+      const order = await getOneOrderByUser(userId, orderId)
+      // ERROR WHEN NOT FOUND
+      if (!order) throw new NotFoundError('Not Found!')
+      //RES
+      return {
+         code: 0,
+         status: StatusCode.SUCCESS,
+         data: order,
+      }
+   }
    // USER //
 
-   public async getOneOrderByUser() {}
-   // USER //
-
-   public async cancelOrderByUser() {}
-   // SHOP  || ADMIN //
-   public async updateOrderStatusByShop() {}
+   public async cancelOrderByUser(userId: string, orderId: string) {
+      const cancelled_order = await orderModel.findOneAndUpdate(
+         {
+            _id: new Types.ObjectId(orderId),
+            order_userId: new Types.ObjectId(userId),
+            order_status: orderStatus.Pending,
+         },
+         {
+            $set: { order_status: orderStatus.Cancelled },
+         },
+         {
+            new: true,
+         }
+      )
+      //
+      if (!cancelled_order) throw new NotFoundError('Not Found!')
+      return {
+         code: 0,
+         status: StatusCode.SUCCESS,
+         message: 'OK!',
+      }
+      //
+   }
+   // SHOP
+   public async updateOrderStatusByShop(shopId: string, orderId: string) {
+      const shop = await findUserByRole(shopId, ROLES.SELLER)
+      if (!shop) throw new NotFoundError('Not Found!')
+      //
+      const updateStatus = await updateStatusOrder({
+         orderId,
+         statusBefore: orderStatus.Pending,
+         statusAfter: orderStatus.Confirmed,
+      })
+      //
+      if (!updateStatus) throw new ConflictRequestError('Error Update!')
+      return {
+         code: 0,
+         status: StatusCode.SUCCESS,
+         message: 'OK!',
+      }
+      //
+   }
 }
 export default new CheckoutService()

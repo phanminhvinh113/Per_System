@@ -8,14 +8,14 @@ export interface inventoryType {
    inv_reservation: any[] | object
 }
 export interface reservationType {
-   cartId: string
-   stock: number
+   cartId: string | Types.ObjectId
+   quantity: number
    createOn: Date | string
 }
 const reservationSchema = new mongoose.Schema<reservationType>(
    {
-      cartId: { type: String, require: true },
-      stock: { type: Number },
+      cartId: { type: Schema.Types.ObjectId, require: true },
+      quantity: { type: Number, required: true },
    },
    {
       timestamps: { createdAt: 'createOn', updatedAt: 'modifiedOn' },
@@ -24,7 +24,7 @@ const reservationSchema = new mongoose.Schema<reservationType>(
 )
 const inventorySchema = new mongoose.Schema<inventoryType>(
    {
-      inv_productId: { type: Types.ObjectId, ref: 'Product' },
+      inv_productId: { type: Schema.Types.ObjectId, ref: 'Product' },
       inv_stock: { type: Number, require: true },
       inv_location: { type: String },
       inv_shopId: { type: Types.ObjectId, ref: 'User' },

@@ -1,19 +1,26 @@
 import { Types } from 'mongoose'
 import { reservationInventory } from '../../models.mongo/repositories/inventory.repo'
-import redisClient from '../connections/init.redis'
-import { promisify } from 'util'
+import redis from '../connections/init.redis'
+import { BadRequestError, ConflictRequestError } from '../../core/error.response'
 
-const pExpire = promisify(redisClient.pExpire).bind(redisClient)
-const setnxAsync = promisify(redisClient.setNX).bind(redisClient)
-const deleteAsyncKey = promisify(redisClient.del).bind(redisClient)
+//
+
+//
+// export const setAsync = promisify(redisClient.set).bind(redisClient)
+// export const getAsync = promisify(redisClient.get).bind(redisClient)
+// export const pExpire = promisify(redisClient.pExpire).bind(redisClient)
+// export const setnxAsync = promisify(redisClient.setNX).bind(redisClient)
+// export const deleteAsyncKey = promisify(redisClient.del).bind(redisClient)
+//
+
 //
 export const acquireLock = async (productId: string | Types.ObjectId, quantity: number, cartId: string) => {
    const key = `lock_${productId}`
    const retryTime: number = 10
-   const expireTime: number = 3000
+   const expireTime: number = 5000
    for (let i = 0; i < retryTime; i++) {
-      const result = await setnxAsync(key, expireTime)
-      console.log('result::::', result)
+      //
+      const result = await redis.setnx(key, expireTime)
       //
       if (!result) {
          await new Promise((resolve) => setTimeout(resolve, 50))
@@ -21,16 +28,18 @@ export const acquireLock = async (productId: string | Types.ObjectId, quantity: 
       //
       const isReservation = await reservationInventory({ productId, quantity, cartId })
       //
-      if (isReservation.modifiedCount) {
-         await pExpire(key, expireTime)
+      console.log('reservation::::', isReservation)
+      //
+      if (isReservation.modifiedCount && isReservation.acknowledged) {
+         await redis.expire(key, 100)
          return key
       } else {
-         return null
+         throw new ConflictRequestError('Some Thing Wrong, Try Again!')
       }
    }
-   return
+   throw new BadRequestError('Set Redis Failed!')
 }
-
-export const releaseLock = async (keyLock: string) => {
-   return await deleteAsyncKey(keyLock)
+//
+export const releaseLock = async (keyLock: string = '') => {
+   return await redis.del(keyLock)
 }

@@ -3,6 +3,7 @@ import { UserModel } from '../../models.mongo/user.model'
 import { User, UserLogin } from '../interface/index.interface'
 import { Track_Device } from '../../utils/constant'
 import keyTokenModel from '../../models.mongo/keyToken.model'
+import { Types } from 'mongoose'
 //import { Types } from 'mongoose'
 
 export const checkExistUser = async (email: string) => {
@@ -46,4 +47,10 @@ export const TrackingDevice = async (userId: string | undefined, IP_Device: stri
       Device: _user?.Device === Device ? Track_Device.DEVICE_OLD : Track_Device.DEVICE_NEW,
       Device_name: Device,
    }
+}
+export const findUserByRole = async (userId: string, role: string) => {
+   return await UserModel.findOne({
+      _id: new Types.ObjectId(userId),
+      roles: { $in: [role] },
+   }).lean()
 }

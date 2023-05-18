@@ -1,8 +1,8 @@
 import express from 'express'
-import { Authentication } from '../../../auth/auth.utils'
+import { AuthenticationAdmin } from '../../../auth/auth.utils'
 const route = express.Router()
 //
-route.use(Authentication)
+route.use('/', AuthenticationAdmin)
 //
 route.get('/get-all-user', (_req: any, res: any) => {
    res.status(200).json({

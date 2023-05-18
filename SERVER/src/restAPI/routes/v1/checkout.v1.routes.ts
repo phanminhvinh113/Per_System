@@ -1,6 +1,6 @@
 import express from 'express'
 import { asyncHandler } from '../../../helpers/asyncHandler'
-import checkoutController from '../../../restAPI/controllers/checkout.controller'
+import checkoutController from '../../controllers/checkout.controller'
 import { Authentication } from '../../../auth/auth.utils'
 
 //

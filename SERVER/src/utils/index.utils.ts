@@ -6,7 +6,7 @@ export const getInfoData = (fields: any, object: object = {}) => {
 export const getSelectData = (select: []) => {
    return Object.fromEntries(select.map((el) => [el, 1]))
 }
-export const unGetSelectData = (select: [] = []) => {
+export const unGetSelectData = (select: string[] = []) => {
    return Object.fromEntries(select.map((el) => [el, 0]))
 }
 export const removeAllElementUnknown = (obj: object) => {

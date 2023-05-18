@@ -60,7 +60,7 @@ export interface DiscountType {
    min_order_value: number
    is_active: boolean
    apply_to_products: string[] | object | string
-   product_ids: string[]
+   product_ids_apply: string[]
 }
 export interface CartProductType {
    product_id: Types.ObjectId | string

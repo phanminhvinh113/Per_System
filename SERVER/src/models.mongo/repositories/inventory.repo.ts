@@ -38,15 +38,30 @@ export const reservationInventory = async ({
    quantity: number
    cartId: string
 }) => {
+   const addToInventory = await inventoryModel.updateOne(
+      {
+         inv_productId: new Types.ObjectId(productId),
+         inv_stock: { $gte: +quantity },
+         'inv_reservation.cartId': new Types.ObjectId(cartId),
+      },
+      {
+         $inc: {
+            inv_stock: -quantity,
+            'inv_reservation.$.quantity': quantity,
+         },
+      },
+      {
+         new: true,
+      }
+   )
+   if (addToInventory.modifiedCount && addToInventory.acknowledged) return addToInventory
    return await inventoryModel.updateOne(
       {
          inv_productId: new Types.ObjectId(productId),
          inv_stock: { $gte: +quantity },
       },
       {
-         $push: {
-            inv_reservation: { productId, cartId, quantity },
-         },
+         $push: { inv_reservation: { cartId, quantity } },
          $inc: {
             inv_stock: -quantity,
          },
