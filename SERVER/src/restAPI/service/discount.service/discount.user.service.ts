@@ -35,12 +35,12 @@ class DiscountUserService {
          value,
          amount_user_used,
          apply_to_products,
-         product_ids,
+         product_ids_apply,
       } = foundDiscount
       // Check Discount Permission For Product
       if (apply_to_products === 'specific') {
          products.forEach((product) => {
-            if (typeof product?.productId === 'string' && !product_ids.includes(product.productId))
+            if (typeof product?.productId === 'string' && !product_ids_apply.includes(product.productId))
                throw new BadRequestError('Discount does not apply for product!')
          })
       }

@@ -26,7 +26,7 @@ class DiscountShopService {
          apply_to_products,
          max_quantity,
          maximum_amount_per_user,
-         product_ids,
+         product_ids_apply,
          min_order_value,
          shop_id,
          type,
@@ -42,7 +42,7 @@ class DiscountShopService {
       const foundDiscount = await discountModel.findOne({ code, shop_id }).lean()
       if (foundDiscount && foundDiscount.is_active) throw new BadRequestError('Discount Is Active!')
       //
-      if (apply_to_products === 'specific' && !product_ids) throw new BadRequestError('Pick Product!')
+      if (apply_to_products === 'specific' && !product_ids_apply) throw new BadRequestError('Pick Product!')
       //
       const newDiscount = await discountModel.create({
          name,
@@ -55,7 +55,7 @@ class DiscountShopService {
          start_date: new Date(start_date),
          end_date: new Date(end_date),
          apply_to_products,
-         product_ids,
+         product_ids_apply,
          max_quantity,
          maximum_amount_per_user,
          min_order_value,
@@ -76,7 +76,7 @@ class DiscountShopService {
       const findDiscount: DiscountType | null = await checkDiscountExist({ code, shopId, discountId })
       if (!findDiscount || !findDiscount.is_active) throw new NotFoundError("Discount Doesn't Exist!")
       //
-      const { apply_to_products, product_ids } = findDiscount
+      const { apply_to_products, product_ids_apply } = findDiscount
       //
       let filter
       if (apply_to_products === 'all') {
@@ -87,7 +87,7 @@ class DiscountShopService {
       }
       if (apply_to_products === 'specific') {
          filter = {
-            _id: { $in: product_ids },
+            _id: { $in: product_ids_apply },
             isPublic: true,
          }
       }

@@ -26,7 +26,7 @@ const historyDiscountSchema = new mongoose.Schema<DiscountType>(
       min_order_value: { type: Number, require: true },
       is_active: { type: Boolean, default: false },
       apply_to_products: { type: String, require: true, enum: ['all', 'specific'] },
-      product_ids: { type: [{ type: String, ref: 'Product' }], default: [], require: true },
+      product_ids_apply: { type: [{ type: String, ref: 'Product' }], default: [], require: true },
    },
    {
       collection: '_History_Discount',

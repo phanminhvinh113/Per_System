@@ -164,7 +164,6 @@ class CheckoutService {
       }
    }
    // USER //
-
    public async cancelOrderByUser(userId: string, orderId: string) {
       const cancelled_order = await orderModel.findOneAndUpdate(
          {
@@ -190,6 +189,7 @@ class CheckoutService {
    }
    // SHOP
    public async updateOrderStatusByShop(shopId: string, orderId: string) {
+      //
       const shop = await findUserByRole(shopId, ROLES.SELLER)
       if (!shop) throw new NotFoundError('Not Found!')
       //
