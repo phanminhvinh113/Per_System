@@ -1,6 +1,6 @@
 import React, { Children, FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import DisscussComment from "./Disscuss";
+import DisscussComment from "./Discuss";
 //
 interface Props {}
 //
