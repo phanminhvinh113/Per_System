@@ -1,8 +1,8 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Children, FC, FunctionComponent, useEffect, useState } from 'react';
+import { FC, FunctionComponent, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import useThrottle from '../../hooks/useThrottle';
+import useDebounce from '../../hooks/useDebounce';
 //
 interface Props {}
 //
@@ -19,12 +19,12 @@ const Search: FunctionComponent<Props> = () => {
     const [query, setQuery] = useState('');
     const [active, setInputActive] = useState(false);
     //
-    const throttle = useThrottle(query, 2000);
+    const valueDebounce = useDebounce(query, 2000);
     //
     useEffect(() => {
         const date = new Date();
-        console.log('throttle:::', date, throttle);
-    }, [throttle]);
+        console.log('throttle:::', date, valueDebounce);
+    }, [valueDebounce]);
     //
     return (
         <SearchWrapper>

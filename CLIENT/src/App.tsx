@@ -3,9 +3,9 @@ import React from 'react';
 import { BrowserRouter, Route, Routes, createBrowserRouter } from 'react-router-dom';
 import routes from './utils/routes';
 import styled from 'styled-components';
-import Register from './page/Register';
-import Home from './page/HomePage';
-import Card from './page/Card';
+import Register from './page/Access/Register';
+import Home from './page/Home/HomePage';
+import Card from './page/Cart/Card';
 import User from './page/User';
 import CommentPage from './components/Comment/Comment';
 
