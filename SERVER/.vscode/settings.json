@@ -4,5 +4,5 @@
    "[dotenv]": {
       "editor.defaultFormatter": "foxundermoon.shell-format"
    },
-   "cSpell.words": ["ampq", "PEXPIRE", "setnx"]
+   "cSpell.words": ["ampq", "fanout", "PEXPIRE", "setnx"]
 }
