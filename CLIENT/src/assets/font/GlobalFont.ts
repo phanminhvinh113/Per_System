@@ -1,6 +1,6 @@
-import {createGlobalStyle} from 'styled-components'
+import { createGlobalStyle } from 'styled-components';
 //
-import Font from './Font.woff2'
+import Font from './Font.woff2';
 import RobotoRegular from './Roboto-Regular.ttf';
 //
 export default createGlobalStyle`
@@ -9,7 +9,6 @@ export default createGlobalStyle`
         src: local('Roboto'), local('Font'),
         url(${Font}) format('woff2'),
         url(${RobotoRegular}) format('ttf');
-       
         font-style: normal;
     }
-`
+`;

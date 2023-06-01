@@ -1,5 +1,5 @@
 export interface routerType {
     title: string;
-    path: string;
+    path?: string;
     element: JSX.Element;
 }
