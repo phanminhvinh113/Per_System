@@ -4,6 +4,7 @@ import Home from './Home/Home.page';
 import Cart from './Cart/Cart.page';
 import NotFoundPage from './Home/NotFound.page';
 import { Navigate } from 'react-router-dom';
+import Login from './Access/Login.page';
 const routesDefaultPage: routerType[] = [
     {
         path: '/',
@@ -15,6 +16,7 @@ const routesDefaultPage: routerType[] = [
         title: 'register',
         element: <Register />,
     },
+    { path: '/login', title: 'login', element: <Login /> },
     {
         path: '/cart',
         title: 'cart',

@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { gql, useMutation } from '@apollo/client';
-import { CREATE_NEW_USER, GET_USER } from '../../graphql/userService';
+import { CREATE_NEW_USER, GET_USER } from '../../graphql/service/userService';
 import { Users } from '../../components/interface';
 import { useNavigate } from 'react-router-dom';
 import { backPage } from '../../utils/constant';

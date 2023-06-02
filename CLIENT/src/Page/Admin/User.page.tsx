@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import styled, { css } from 'styled-components';
-import { DELETE_USER, GET_USER } from '../../graphql/userService';
+import { DELETE_USER, GET_USER } from '../../graphql/service/userService';
 import { Users } from '../../components/interface';
 import { Button } from '../../components/StyledDefault/Button';
 import { useNavigate } from 'react-router-dom';
