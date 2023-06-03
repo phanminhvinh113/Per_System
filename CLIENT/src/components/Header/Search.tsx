@@ -23,7 +23,6 @@ const Search: FunctionComponent<Props> = () => {
     //
     useEffect(() => {
         const date = new Date();
-        console.log('throttle:::', date, valueDebounce);
     }, [valueDebounce]);
     //
     return (

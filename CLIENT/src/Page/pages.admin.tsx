@@ -1,7 +1,7 @@
 import { routerType } from '../types/router.types';
-import NotFoundPage from './Home/NotFound.page';
+import NotFoundPage from './home/NotFound.page';
 import { Navigate } from 'react-router-dom';
-import User from './Admin/User.page';
+import User from './admin/User.page';
 const routesAdminPage: routerType[] = [
     {
         path: '/admin/user',

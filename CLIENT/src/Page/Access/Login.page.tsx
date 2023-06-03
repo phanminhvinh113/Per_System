@@ -1,4 +1,4 @@
-import { FunctionComponent, memo, useMemo, useState } from 'react';
+import { FunctionComponent, memo, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import InputFill from '../../components/Input/InputFill';
 
@@ -24,6 +24,10 @@ const Login: FunctionComponent<LoginProps> = () => {
         password: { type: 'password', text: '' },
         confirmPassword: { type: 'password', text: '' },
     });
+    //
+    useEffect(() => {
+        console.log('re-render');
+    }, []);
     // ON CHANGE INPUT
     const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
