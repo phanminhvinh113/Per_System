@@ -14,8 +14,7 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt }) => {
         //
         const observer = new IntersectionObserver((entires) => {
             entires.forEach((entry) => {
-                console.log(entry);
-                if (entry.isIntersecting || entry.intersectionRatio > 0) {
+                if (entry.isIntersecting) {
                     const img = imageRef.current;
                     console.log(entry);
                     if (img) {
@@ -35,10 +34,11 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt }) => {
     }, [src]);
     //
 
-    return <Image src={src} alt={alt} />;
+    return <Image ref={imageRef} alt={alt} />;
 };
 
 export default LazyImage;
+//
 const Image = styled.img`
     height: 300px;
     width: 300px;
