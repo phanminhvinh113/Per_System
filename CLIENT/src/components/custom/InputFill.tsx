@@ -19,7 +19,7 @@ interface InputStyle {
 const InputFill: FunctionComponent<InputFillProps> = (props) => {
     const { type, value, style, name, onChangeInput } = props;
     console.log('component re-render::', name);
-    return <Fill type={type} value={value} name={name} onChange={onChangeInput} placeholder={`${name}...`} />;
+    return <Fill {...props} placeholder={`${name}...`} />;
 };
 //
 export default InputFill;

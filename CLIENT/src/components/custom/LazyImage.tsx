@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 interface LazyImageProps {
@@ -9,18 +9,17 @@ interface LazyImageProps {
 const LazyImage: FC<LazyImageProps> = ({ src, alt }) => {
     //
     const imageRef = useRef<HTMLImageElement>(null);
+
+    //
+    const lazyImage = () => {};
     //
     useEffect(() => {
-        //
-        const observer = new IntersectionObserver((entires) => {
+        const observer = new window.IntersectionObserver((entires) => {
             entires.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    const img = imageRef.current;
-                    console.log(entry);
-                    if (img) {
-                        img.src = src;
-                        observer.unobserve(img);
-                    }
+                console.log(entry);
+                if (entry.isIntersecting && imageRef.current) {
+                    imageRef.current.src = src;
+                    observer.unobserve(imageRef.current);
                 }
             });
         });
@@ -28,16 +27,23 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt }) => {
         const img = imageRef.current;
         if (img) observer.observe(img);
         //
+
         return () => {
             if (img) observer.unobserve(img);
         };
     }, [src]);
     //
 
-    return <Image ref={imageRef} alt={alt} />;
+    return <Image ref={imageRef} alt={alt} loading="lazy" />;
 };
 
 export default LazyImage;
+//
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
 //
 const Image = styled.img`
     height: 300px;

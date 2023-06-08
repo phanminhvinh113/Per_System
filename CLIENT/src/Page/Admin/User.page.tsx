@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import styled, { css } from 'styled-components';
 import { DELETE_USER, GET_USER } from '../../graphql/service/userService';
 import { Users } from '../../components/interface';
-import { Button } from '../../components/StyledDefault/Button';
+import { Button } from '../../components/styledDefault/Button';
 import { useNavigate } from 'react-router-dom';
 //
 interface Props {
