@@ -1,69 +1,106 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import HeaderDefault from '../../components/header/Header.default';
 import GlobalFont from '../../assets/font/GlobalFont';
-import LazyImage from '../../components/custom/LazyImage';
-import Spinner from '../../components/animation/Spinner';
-import DotLoader from '../../components/animation/DotLoader';
 import Skeleton, { SkeletonTheme } from '../../components/custom/Skeleton';
+import axios from 'axios';
+import Animal from './Animal';
+import { useNavigate } from 'react-router-dom';
+
 interface HomeProps {}
 //
-
+interface stateStyle {
+    listAnimal: any[];
+    isLoading: boolean;
+    limit: number;
+}
+//
 const Home = () => {
     //
-    const [ListImageEffect, setListImageEffect] = useState<any[]>([]);
+    const [{ isLoading, listAnimal, limit }, setState] = useState<stateStyle>({
+        listAnimal: [],
+        isLoading: false,
+        limit: 5,
+    });
+    const refAnimal = useRef<HTMLDivElement>(null);
     //
-    const ListImage = {
-        original: 'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg',
-        large2x:
-            'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-        large: 'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-        medium: 'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=350',
-        small: 'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=130',
-        portrait:
-            'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
-        landscape:
-            'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
-        tiny: 'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280',
-    };
+    const navigate = useNavigate();
     //
-    const loadingImages = () => {
-        setTimeout(() => {
-            setListImageEffect(Object.entries(ListImage));
+    const getAnimal = async () => {
+        setState((prev) => ({
+            ...prev,
+            isLoading: true,
+        }));
+        //
+        setTimeout(async () => {
+            const { data } = await axios({
+                method: 'get',
+                url: `https://dog.ceo/api/breed/hound/images/random/${limit}`,
+            });
+            if (!data) throw Error('Data Missing');
+
+            setState((prev) => ({
+                ...prev,
+                isLoading: false,
+                listAnimal: [...prev.listAnimal, ...data.message],
+            }));
         }, 2000);
+        //
     };
     //
-    // test lazy loading image
-    useEffect(() => {
-        loadingImages();
-    }, []);
-
-    const LazyComponent = React.lazy(() => import('../../components/header/Header.default'));
+    const handleIntersection: IntersectionObserverCallback = (entries, observer) => {
+        entries.forEach(async (entry) => {
+            if (entry.isIntersecting) {
+                console.log(entries);
+                await getAnimal();
+            }
+        });
+    };
     //
+    useEffect(() => {
+        getAnimal();
+    }, []);
+    //
+    useEffect(() => {
+        //
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1,
+        };
+        //
+        const observer = new IntersectionObserver(handleIntersection, options);
+        if (refAnimal && refAnimal.current) {
+            observer.observe(refAnimal.current);
+        }
+        //
+        return () => observer.disconnect();
+    }, [isLoading, listAnimal]);
 
+    const animalContent = useMemo(() => {
+        return listAnimal.map((animal: any, index) => {
+            return index + 1 === listAnimal.length ? (
+                <Animal key={index} ref={refAnimal} animal={animal} />
+            ) : (
+                <Animal key={index} animal={animal} />
+            );
+        });
+    }, [listAnimal]);
+    //
+    const skeletonMemo = (
+        <SkeletonTheme repeat={2} borderRadius={10} width="500px">
+            <Skeleton circle={true} size_circle="75px" />
+            <Skeleton count={1} width="100px" borderRadius={5} />
+            <Skeleton count={2} height="20px" borderRadius={5} />
+        </SkeletonTheme>
+    );
+    //
     return (
         <HomePage>
-            <GlobalFont />
             <HeaderDefault />
-            <div className="container">
-                <div className="row">
-                    <div className='"col-sm"'>
-                        <SkeletonTheme repeat={3} borderRadius={10}>
-                            <Skeleton circle={true} />
-                            <Skeleton count={2} height="20px" borderRadius={5} direction="rtl" />
-                        </SkeletonTheme>
-                    </div>
-                </div>
-            </div>
 
-            {ListImageEffect.length ? (
-                ListImageEffect.map(([key, src], index) => <LazyImage key={index} src={src} alt={key} />)
-            ) : (
-                <SkeletonTheme repeat={3} borderRadius={10}>
-                    <Skeleton circle={true} />
-                    <Skeleton count={2} height="20px" borderRadius={5} />
-                </SkeletonTheme>
-            )}
+            {listAnimal.length && animalContent}
+            {isLoading && skeletonMemo}
         </HomePage>
     );
 };
@@ -73,6 +110,8 @@ export default Home;
 //
 const HomePage = styled.div`
     font-family: 'Roboto';
+    display: grid;
+    justify-items: center;
 `;
 
 const Wrapper = styled.div`

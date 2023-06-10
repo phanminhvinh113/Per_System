@@ -13,6 +13,5 @@ export const DEFAULT_PROPS_SKELETON = {
     size_circle: '50px',
     margin: '20px',
     repeat: 1,
-
     width_theme: '400px',
 };

@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, memo } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { DEFAULT_PROPS_SKELETON } from './constant';
 import { SkeletonProps, SkeletonThemeProps } from '../interface';
@@ -24,10 +24,10 @@ const Skeleton: FunctionComponent<SkeletonProps> = (props) => {
 
     return (
         <>
-            {new Array(count).fill(0).map((index: number, _: any) => (
+            {new Array(count).fill(0).map((_: any, index: number) => (
                 <SkeletonStyle
                     {...props}
-                    key={Math.random()}
+                    key={index}
                     height={height}
                     width={width}
                     backgroundColor={backgroundColor}
@@ -44,7 +44,7 @@ const Skeleton: FunctionComponent<SkeletonProps> = (props) => {
     );
 };
 // SKELETON THEME TO WRAP FOR SKELETON
-export const SkeletonTheme: FunctionComponent<SkeletonThemeProps> = (props) => {
+export const SkeletonTheme: FunctionComponent<SkeletonThemeProps> = memo((props) => {
     const {
         children,
         width = DEFAULT_PROPS_SKELETON.width_theme,
@@ -55,8 +55,9 @@ export const SkeletonTheme: FunctionComponent<SkeletonThemeProps> = (props) => {
     } = props;
     return (
         <Wrapper>
-            {new Array(repeat).fill(0).map((_) => (
+            {new Array(repeat).fill(0).map((_, index) => (
                 <SkeletonThemeStyle
+                    key={index}
                     {...props}
                     width={width}
                     backgroundColor={backgroundColor}
@@ -68,9 +69,9 @@ export const SkeletonTheme: FunctionComponent<SkeletonThemeProps> = (props) => {
             ))}
         </Wrapper>
     );
-};
+});
 //
-export default Skeleton;
+export default memo(Skeleton);
 //animation for skeleton
 const shimmerLTR = keyframes`
     100% {
@@ -85,7 +86,7 @@ const shimmerRTL = keyframes`
 // Style Skeleton
 const SkeletonStyle = styled.div<SkeletonProps>`
     position: relative;
-    display: inline-block;
+    margin: 5px 0;
     height: ${({ height, circle, size_circle }) => (circle ? size_circle : height)};
     width: ${({ width, circle, size_circle }) => (circle ? size_circle : width)};
     background-color: ${({ backgroundColor }) => backgroundColor};

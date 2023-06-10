@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import LogoShop from '../../assets/images/shopify.svg';
 import styled from 'styled-components';
 import homeIcon from '../../assets/images/home_icon.png';
@@ -31,7 +31,7 @@ const HeaderDefault: FC<Props> = () => {
     );
 };
 
-export default HeaderDefault;
+export default memo(HeaderDefault);
 
 const Header = styled.div`
     height: 90px;

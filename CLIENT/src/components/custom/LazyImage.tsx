@@ -1,22 +1,35 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, memo, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import defaultImage from '../../assets/images/default-image.jpg';
 
 interface LazyImageProps {
     src: string;
-    alt: string;
+    alt?: string;
+    circle?: boolean;
+    height?: number;
+    width?: number;
+    size_circle?: number;
+    style?: React.CSSProperties;
 }
-
-const LazyImage: FC<LazyImageProps> = ({ src, alt }) => {
+//
+interface ImageStyleProps {
+    src?: string;
+    alt?: string;
+    circle?: boolean;
+    height?: number;
+    width?: number;
+    size_circle?: number;
+}
+const LazyImage: FC<LazyImageProps> = (props) => {
+    const { src, alt } = props;
     //
     const imageRef = useRef<HTMLImageElement>(null);
-
-    //
-    const lazyImage = () => {};
     //
     useEffect(() => {
+        //
         const observer = new window.IntersectionObserver((entires) => {
             entires.forEach((entry) => {
-                console.log(entry);
+                //console.log(entry);
                 if (entry.isIntersecting && imageRef.current) {
                     imageRef.current.src = src;
                     observer.unobserve(imageRef.current);
@@ -27,17 +40,15 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt }) => {
         const img = imageRef.current;
         if (img) observer.observe(img);
         //
-
         return () => {
             if (img) observer.unobserve(img);
         };
     }, [src]);
-    //
 
-    return <Image ref={imageRef} alt={alt} loading="lazy" />;
+    return <Image {...props} ref={imageRef} alt={alt} loading="lazy" />;
 };
 
-export default LazyImage;
+export default memo(LazyImage);
 //
 const Wrapper = styled.div`
     display: flex;
@@ -45,8 +56,8 @@ const Wrapper = styled.div`
     align-items: center;
 `;
 //
-const Image = styled.img`
-    height: 300px;
-    width: 300px;
-    margin: auto;
+const Image = styled.img<ImageStyleProps>`
+    height: ${({ circle, height = 200, size_circle = 50 }) => (circle ? size_circle : height)}px;
+    width: ${({ circle, width = 200, size_circle = 50 }) => (circle ? size_circle : width)}px;
+    border-radius: ${({ circle }) => (circle ? '50%' : 0)};
 `;

@@ -10,11 +10,21 @@ import routes from '../../utils/routes';
 interface Props {}
 
 const Register: FC<Props> = () => {
+    //
     const [inputUser, setInputUser] = useState<Users>({
         name: '',
         email: '',
         password: '',
     });
+    //
+    const [state, setState] = useState({
+        inputFill: [
+            { value: '', name: 'email', type: 'text' },
+            { value: '', name: 'password', type: 'password' },
+            { value: '', name: 'confirm password', type: 'password' },
+        ],
+    });
+    //
     const [CreateUser, { data, error }] = useMutation(CREATE_NEW_USER, {
         update(cache, { data: { CreateUser: newUser } }) {
             cache.modify({
@@ -40,48 +50,66 @@ const Register: FC<Props> = () => {
         await CreateUser({
             variables: { inputUser },
         });
-        console.log('error', error);
-        console.log('response', data);
     };
     //
-    const handleOnChaneInput = (e: any) => {
+    const handleOnChangeInput = (e: any) => {
         setInputUser((prev: Users) => ({
             ...prev,
             [e.target.name]: e.target.value,
         }));
     };
     //
+    const testOnChangeInput = (e: any, id: number) => {
+        setState((prev) => {
+            let tagTarget = prev.inputFill.find((item, index) => index === id);
+            if (tagTarget) tagTarget.value = e.target.value;
+            return { ...prev };
+        });
+    };
 
-    const naviagte = useNavigate();
+    const navigate = useNavigate();
 
     //
     return (
         <Wrapper className="container mx-auto mt-20 w-full max-w-container px-4 sm:px-6 lg:px-8">
-            <button className="mb-4" onClick={() => naviagte(backPage.prevPage)}>
+            <button className="mb-4" onClick={() => navigate(backPage.prevPage)}>
                 Back Home
             </button>
             <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-                <Input
+                {state.inputFill.map((item, index) => {
+                    return (
+                        <Input
+                            key={index}
+                            value={item.value}
+                            type={item.type}
+                            placeholder="Typing"
+                            name={item.name}
+                            onChange={(e) => testOnChangeInput(e, index)}
+                        />
+                    );
+                })}
+
+                {/* <Input
                     value={inputUser.name}
                     type="text"
                     placeholder="Nhap ten..."
                     name="name"
-                    onChange={(e) => handleOnChaneInput(e)}
+                    onChange={(e) => handleOnChangeInput(e)}
                 />
                 <Input
                     value={inputUser.email}
                     type="email"
                     name="email"
                     placeholder="Email..."
-                    onChange={(e) => handleOnChaneInput(e)}
+                    onChange={(e) => handleOnChangeInput(e)}
                 />
                 <Input
                     value={inputUser.password}
                     type="password"
                     name="password"
                     placeholder="Password..."
-                    onChange={(e) => handleOnChaneInput(e)}
-                />
+                    onChange={(e) => handleOnChangeInput(e)}
+                /> */}
             </div>
             <button onClick={handleRegisterUser}>Register</button>
         </Wrapper>
