@@ -5,6 +5,7 @@ import Cart from './cart/Cart.page';
 import NotFoundPage from './home/NotFound.page';
 import { Navigate } from 'react-router-dom';
 import Login from './access/Login.page';
+//
 const routesDefaultPage: routerType[] = [
     {
         path: '/',

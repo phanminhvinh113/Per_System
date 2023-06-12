@@ -25,9 +25,7 @@ const Login: FunctionComponent<LoginProps> = () => {
         confirmPassword: { type: 'password', text: '' },
     });
     //
-    useEffect(() => {
-        console.log('re-render');
-    }, []);
+    useEffect(() => {}, []);
     // ON CHANGE INPUT
     const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

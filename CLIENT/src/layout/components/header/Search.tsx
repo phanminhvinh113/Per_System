@@ -2,7 +2,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, FunctionComponent, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import useDebounce from '../../hooks/useDebounce';
+import useDebounce from '../../../hooks/useDebounce';
 //
 interface Props {}
 //

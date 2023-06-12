@@ -1,6 +1,7 @@
 import { FC, memo, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import defaultImage from '../../assets/images/default-image.jpg';
+import defaultImage from '../../assets/images/home/default-image.jpg';
+import Skeleton from './Skeleton';
 
 interface LazyImageProps {
     src: string;
@@ -29,7 +30,6 @@ const LazyImage: FC<LazyImageProps> = (props) => {
         //
         const observer = new window.IntersectionObserver((entires) => {
             entires.forEach((entry) => {
-                //console.log(entry);
                 if (entry.isIntersecting && imageRef.current) {
                     imageRef.current.src = src;
                     observer.unobserve(imageRef.current);
@@ -45,7 +45,7 @@ const LazyImage: FC<LazyImageProps> = (props) => {
         };
     }, [src]);
 
-    return <Image {...props} ref={imageRef} alt={alt} loading="lazy" />;
+    return <Image {...props} ref={imageRef} alt={alt} src={imageRef.current?.src ? src : defaultImage} />;
 };
 
 export default memo(LazyImage);

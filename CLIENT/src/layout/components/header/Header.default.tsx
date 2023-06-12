@@ -1,12 +1,12 @@
 import React, { FC, memo } from 'react';
-import LogoShop from '../../assets/images/shopify.svg';
+import LogoShop from '../../../assets/images/home/shopify.svg';
 import styled from 'styled-components';
-import homeIcon from '../../assets/images/home_icon.png';
-import accountIcon from '../../assets/images/account_icon.png';
-import cartIcon from '../../assets/images/cart_icon.png';
+import homeIcon from '../../../assets/images//home/home_icon.png';
+import accountIcon from '../../../assets/images/home/account_icon.png';
+import cartIcon from '../../../assets/images/home/cart_icon.png';
 import Search from './Search';
 import { Link } from 'react-router-dom';
-import routes from '../../utils/routes';
+import routes from '../../../utils/routes';
 //
 interface Props {}
 
@@ -35,7 +35,7 @@ export default memo(HeaderDefault);
 
 const Header = styled.div`
     height: 90px;
-    width: 100vw;
+    width: 100%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;

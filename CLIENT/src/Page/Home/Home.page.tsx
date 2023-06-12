@@ -1,11 +1,13 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import HeaderDefault from '../../components/header/Header.default';
+import HeaderDefault from '../../layout/components/header/Header.default';
 import GlobalFont from '../../assets/font/GlobalFont';
 import Skeleton, { SkeletonTheme } from '../../components/custom/Skeleton';
 import axios from 'axios';
 import Animal from './Animal';
 import { useNavigate } from 'react-router-dom';
+import Outstanding from '../../layout/components/sidebar/Outstanding';
+import { DefaultLayout } from '../../layout';
 
 interface HomeProps {}
 //
@@ -97,10 +99,12 @@ const Home = () => {
     //
     return (
         <HomePage>
-            <HeaderDefault />
-
-            {listAnimal.length && animalContent}
-            {isLoading && skeletonMemo}
+            {/* <HeaderDefault />
+            <Outstanding /> */}
+            <DefaultLayout>
+                {!!listAnimal.length && animalContent}
+                {isLoading && skeletonMemo}
+            </DefaultLayout>
         </HomePage>
     );
 };
@@ -108,15 +112,4 @@ const Home = () => {
 export default Home;
 
 //
-const HomePage = styled.div`
-    font-family: 'Roboto';
-    display: grid;
-    justify-items: center;
-`;
-
-const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-`;
+const HomePage = styled.div``;
