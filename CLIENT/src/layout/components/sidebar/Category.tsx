@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { RouteElementCategory } from './RouteElement.config';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ElementStyle, SideBarStyle, Title, Image } from './SideBar.style';
 import LazyImage from '../../../components/custom/LazyImage';
 
@@ -23,4 +23,4 @@ const Category: FC<CategoryProps> = () => {
     );
 };
 
-export default Category;
+export default memo(Category);

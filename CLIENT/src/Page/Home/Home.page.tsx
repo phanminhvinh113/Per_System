@@ -8,6 +8,8 @@ import Animal from './Animal';
 import { useNavigate } from 'react-router-dom';
 import Outstanding from '../../layout/components/sidebar/Outstanding';
 import { DefaultLayout } from '../../layout';
+import DatePicker from '../../components/DatePikcer/DatePicker';
+import dayjs from 'dayjs';
 
 interface HomeProps {}
 //
@@ -97,11 +99,13 @@ const Home = () => {
         </SkeletonTheme>
     );
     //
+    const [date, setDate] = useState(dayjs());
+
+    //
     return (
         <HomePage>
-            {/* <HeaderDefault />
-            <Outstanding /> */}
             <DefaultLayout>
+                <DatePicker />
                 {!!listAnimal.length && animalContent}
                 {isLoading && skeletonMemo}
             </DefaultLayout>

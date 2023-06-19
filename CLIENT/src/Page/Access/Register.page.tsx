@@ -1,8 +1,8 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { gql, useMutation } from '@apollo/client';
 import { CREATE_NEW_USER, GET_USER } from '../../graphql/service/userService';
-import { Users } from '../../components/interface';
+import { Users } from '../../components/interface/interface';
 import { useNavigate } from 'react-router-dom';
 import { backPage } from '../../utils/constant';
 import routes from '../../utils/routes';
@@ -10,12 +10,6 @@ import routes from '../../utils/routes';
 interface Props {}
 
 const Register: FC<Props> = () => {
-    //
-    const [inputUser, setInputUser] = useState<Users>({
-        name: '',
-        email: '',
-        password: '',
-    });
     //
     const [state, setState] = useState({
         inputFill: [
@@ -25,39 +19,7 @@ const Register: FC<Props> = () => {
         ],
     });
     //
-    const [CreateUser, { data, error }] = useMutation(CREATE_NEW_USER, {
-        update(cache, { data: { CreateUser: newUser } }) {
-            cache.modify({
-                fields: {
-                    Users(existingUser: Users[]) {
-                        const newUerRef = cache.writeFragment({
-                            data: newUser,
-                            fragment: gql`
-                                fragment NewUser on Users {
-                                    name
-                                    email
-                                    _id
-                                }
-                            `,
-                        });
-                        return [...existingUser, newUerRef];
-                    },
-                },
-            });
-        },
-    });
-    const handleRegisterUser = async () => {
-        await CreateUser({
-            variables: { inputUser },
-        });
-    };
-    //
-    const handleOnChangeInput = (e: any) => {
-        setInputUser((prev: Users) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
-    };
+    const navigate = useNavigate();
     //
     const testOnChangeInput = (e: any, id: number) => {
         setState((prev) => {
@@ -66,10 +28,12 @@ const Register: FC<Props> = () => {
             return { ...prev };
         });
     };
-
-    const navigate = useNavigate();
-
+    const handleRegisterUser = () => {
+        console.log(state.inputFill);
+    };
     //
+
+    console.log('re-render');
     return (
         <Wrapper className="container mx-auto mt-20 w-full max-w-container px-4 sm:px-6 lg:px-8">
             <button className="mb-4" onClick={() => navigate(backPage.prevPage)}>
@@ -77,39 +41,21 @@ const Register: FC<Props> = () => {
             </button>
             <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
                 {state.inputFill.map((item, index) => {
-                    return (
-                        <Input
-                            key={index}
-                            value={item.value}
-                            type={item.type}
-                            placeholder="Typing"
-                            name={item.name}
-                            onChange={(e) => testOnChangeInput(e, index)}
-                        />
+                    return useMemo(
+                        () => (
+                            <Input
+                                key={index}
+                                value={item.value}
+                                type={item.type}
+                                placeholder="Typing"
+                                name={item.name}
+                                onChange={(e) => testOnChangeInput(e, index)}
+                                hidden={false}
+                            />
+                        ),
+                        [item.value, item.name],
                     );
                 })}
-
-                {/* <Input
-                    value={inputUser.name}
-                    type="text"
-                    placeholder="Nhap ten..."
-                    name="name"
-                    onChange={(e) => handleOnChangeInput(e)}
-                />
-                <Input
-                    value={inputUser.email}
-                    type="email"
-                    name="email"
-                    placeholder="Email..."
-                    onChange={(e) => handleOnChangeInput(e)}
-                />
-                <Input
-                    value={inputUser.password}
-                    type="password"
-                    name="password"
-                    placeholder="Password..."
-                    onChange={(e) => handleOnChangeInput(e)}
-                /> */}
             </div>
             <button onClick={handleRegisterUser}>Register</button>
         </Wrapper>

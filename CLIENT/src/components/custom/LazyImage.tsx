@@ -1,7 +1,6 @@
 import { FC, memo, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import defaultImage from '../../assets/images/home/default-image.jpg';
-import Skeleton from './Skeleton';
 
 interface LazyImageProps {
     src: string;
@@ -45,7 +44,7 @@ const LazyImage: FC<LazyImageProps> = (props) => {
         };
     }, [src]);
 
-    return <Image {...props} ref={imageRef} alt={alt} src={imageRef.current?.src ? src : defaultImage} />;
+    return <Image {...props} ref={imageRef} alt={alt} />;
 };
 
 export default memo(LazyImage);

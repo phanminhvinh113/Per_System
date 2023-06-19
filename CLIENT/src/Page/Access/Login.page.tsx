@@ -1,54 +1,68 @@
-import { FunctionComponent, memo, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import InputFill from '../../components/custom/InputFill';
-
+import { TypeInput, UserInputLogin } from './interface';
+import { GoogleLogin, useGoogleLogin, CredentialResponse } from '@react-oauth/google';
+//
 interface LoginProps {}
 //
-interface UserInput {
-    email: TypeInput;
-    phone: TypeInput;
-    password: TypeInput;
-    confirmPassword: TypeInput;
+
+interface GoogleLoginProps {
+    useOneTap?: boolean;
 }
+
 //
-interface TypeInput {
-    type: string;
-    text: string | number;
-}
+const LoginByGoogle: FC<GoogleLoginProps> = ({ useOneTap = false }) => {
+    return (
+        <GoogleLogin
+            onSuccess={(response: CredentialResponse) => console.log(response)}
+            onError={() => {
+                console.log('Login Failed!');
+            }}
+            cancel_on_tap_outside={true}
+            context="signin"
+            shape="circle"
+            useOneTap={useOneTap}
+        />
+    );
+};
 //
-const Login: FunctionComponent<LoginProps> = () => {
+const Login: FC<LoginProps> = (props) => {
     //
-    const [input, setInput] = useState<UserInput>({
-        email: { type: 'text', text: '' },
-        phone: { type: 'text', text: '' },
-        password: { type: 'password', text: '' },
-        confirmPassword: { type: 'password', text: '' },
+    const [inputState, setInputState] = useState<UserInputLogin>({
+        email: { type: 'text', value: '' },
+        phone: { type: 'text', value: '' },
+        password: { type: 'password', value: '' },
+        confirmPassword: { type: 'password', value: '' },
     });
-    //
-    useEffect(() => {}, []);
     // ON CHANGE INPUT
     const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-
-        setInput((prev: any) => ({
+        if (!name || !value) return;
+        setInputState((prev: any) => ({
             ...prev,
             [name]: {
                 ...prev[name],
-                text: value,
+                value,
             },
         }));
     };
-    // CHILDREN (Memoize the MemoizedInputFill component to prevent re-renders if dependencies haven't changed)
-    const children = Object.entries(input).map(([key, field]: [string, TypeInput], index: number) => {
+    //CHILDREN (Memoize the MemoizedInputFill component to prevent re-renders if dependencies haven't changed)
+    const InputToFill = Object.entries(inputState).map(([key, field]: [string, TypeInput], index: number) => {
         return useMemo(
             () => (
-                <InputFill key={index} type={field.type} value={field.text} name={key} onChangeInput={onChangeInput} />
+                <InputFill key={index} type={field.type} value={field.value} name={key} onChangeInput={onChangeInput} />
             ),
-            [field.text, key],
+            [key, field.value],
         );
     });
-    //
-    return <LoginWrapper>{children}</LoginWrapper>;
+
+    return (
+        <LoginWrapper>
+            {InputToFill}
+            <LoginByGoogle />
+        </LoginWrapper>
+    );
 };
 
 export default Login;

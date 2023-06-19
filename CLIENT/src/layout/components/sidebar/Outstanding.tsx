@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { RouteElementOutstanding } from './RouteElement.config';
 import { Link, useNavigate } from 'react-router-dom';
 import { ElementStyle, SideBarStyle, Title, Image } from './SideBar.style';
@@ -16,7 +16,6 @@ const Outstanding: FC<OutstandingProps> = () => {
                     <Image>
                         <LazyImage src={element.imageUrl} circle={true} size_circle={32} />
                     </Image>
-
                     <Title>{element.title}</Title>
                 </ElementStyle>
             ))}
@@ -24,5 +23,5 @@ const Outstanding: FC<OutstandingProps> = () => {
     );
 };
 
-export default Outstanding;
+export default memo(Outstanding);
 //

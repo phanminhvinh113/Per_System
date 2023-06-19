@@ -1,11 +1,11 @@
-import { FunctionComponent, memo } from 'react';
+import { FC, FunctionComponent, memo } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { DEFAULT_PROPS_SKELETON } from './constant';
-import { SkeletonProps, SkeletonThemeProps } from '../interface';
+import { DEFAULT_PROPS_SKELETON } from '../../utils/constant';
+import { SkeletonProps, SkeletonThemeProps } from '../interface/interface';
+import { ReadOnly } from '../interface/readonly';
 
 //
-//
-const Skeleton: FunctionComponent<SkeletonProps> = (props) => {
+const Skeleton = (props: ReadOnly<SkeletonProps>) => {
     // DESTRUCT PROPS AND DEFAULT
     const {
         count = DEFAULT_PROPS_SKELETON.count,
@@ -21,7 +21,6 @@ const Skeleton: FunctionComponent<SkeletonProps> = (props) => {
         size_circle = DEFAULT_PROPS_SKELETON.size_circle,
     } = props;
     //
-
     return (
         <>
             {new Array(count).fill(0).map((_: any, index: number) => (

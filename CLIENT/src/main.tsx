@@ -1,12 +1,14 @@
 import { Profiler } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import store from './store/store';
+import { store, persistor } from './store/store';
+
 import App from './App';
 import { ApolloProvider } from '@apollo/client';
 import clientApollo from './config/apolloClient';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { PersistGate } from 'redux-persist/integration/react';
 import './GlobalStyle.css';
-
 //
 const logTimes = (id: any, phase: any, actualTime: any, baseTime: any, startTime: any, commitTime: any) => {
     // console.log(`${id}'s ${phase} phase:`);
@@ -21,9 +23,13 @@ const logTimes = (id: any, phase: any, actualTime: any, baseTime: any, startTime
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <ApolloProvider client={clientApollo}>
         <Provider store={store}>
-            <Profiler id="App" onRender={logTimes}>
-                <App />
-            </Profiler>
+            <PersistGate loading={null} persistor={persistor}>
+                <Profiler id="App" onRender={logTimes}>
+                    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+                        <App />
+                    </GoogleOAuthProvider>
+                </Profiler>
+            </PersistGate>
         </Provider>
     </ApolloProvider>,
 );

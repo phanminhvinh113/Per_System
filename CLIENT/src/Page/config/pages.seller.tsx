@@ -1,11 +1,11 @@
-import { routerType } from '../types/router.types';
-import NotFoundPage from './home/NotFound.page';
+import { routerType } from '../../types/router.types';
+import NotFoundPage from '../home/NotFound.page';
 import { Navigate } from 'react-router-dom';
-import User from './admin/User.page';
-const routesAdminPage: routerType[] = [
+import User from '../admin/User.page';
+const routesSellerPage: routerType[] = [
     {
-        path: '/admin/user',
-        title: 'manage user',
+        path: '/home',
+        title: 'Seller Page',
         element: <User />,
     },
     {
@@ -19,4 +19,4 @@ const routesAdminPage: routerType[] = [
         element: <NotFoundPage />,
     },
 ];
-export default routesAdminPage;
+export default routesSellerPage;

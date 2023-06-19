@@ -1,25 +1,18 @@
-import { FunctionComponent, memo, useCallback, useMemo } from 'react';
+import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 
 interface InputFillProps {
     name: string;
     type: string;
     value: string | number;
-    style?: InputStyle;
-    onChangeInput: (e: any) => void;
-}
-interface InputStyle {
-    padding?: string;
-    border?: string;
-    color?: string;
-    outline?: string;
-    margin?: string;
+    style?: React.CSSProperties;
+    onChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 //
 const InputFill: FunctionComponent<InputFillProps> = (props) => {
-    const { type, value, style, name, onChangeInput } = props;
-    console.log('component re-render::', name);
-    return <Fill {...props} placeholder={`${name}...`} />;
+    const { name, onChangeInput, type, style, value } = props;
+    console.log('re-render', name);
+    return <Fill type={type} name={name} value={value} placeholder={`${name}...`} onChange={onChangeInput} />;
 };
 //
 export default InputFill;

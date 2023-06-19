@@ -22,7 +22,7 @@ export interface SkeletonProps {
     style?: React.CSSProperties;
 }
 //
-interface SkeletonThemeProps {
+export interface SkeletonThemeProps {
     repeat?: number;
     margin?: string;
     children: React.ReactNode;
