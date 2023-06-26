@@ -22,6 +22,7 @@ class accessController {
    }
    RegisterSeller = async (req: Request, res: Response) => {
       try {
+         // get ip device send request
          const IP_Device = req.headers['x-forwarded-for'] || req.connection.remoteAddress
          const Device = useragent.parse(req.headers['user-agent']).os.toString()
          const userId = req.User?.userId || req.headers['x-client-id']
@@ -38,11 +39,12 @@ class accessController {
    }
    Login = async (req: Request, res: Response) => {
       try {
+         // get IP device send request
          const IP_Device: string | string[] | undefined = req.headers['x-forwarded-for'] || req.connection.remoteAddress
          const Device = useragent.parse(req.headers['user-agent']).os.toString()
          //
          const response: any = await accessService.Login({ ...req.body, IP_Device, Device })
-         //
+         //save cookie to cookies browser
          await res.cookie('refreshToken', response.data?.tokens.refreshToken, {
             httpOnly: true,
             secure: false,

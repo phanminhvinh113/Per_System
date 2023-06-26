@@ -1,5 +1,5 @@
 import { ProductType } from '../../models.mongo/interface.model'
-import { ProductModel, ClothingModel, ElectronicModel, FurnitureModel } from '../../models.mongo/product.model'
+import { ProductModel, ClothingModel, ElectronicModel, FurnitureModel, LaptopModel, PhoneModel } from '../../models.mongo/product.model'
 import { BadRequestError } from '../../core/error.response'
 import { StatusCode, TypeProduct } from '../../utils/constant'
 import {
@@ -25,9 +25,9 @@ interface getAllProductType {
 // PRODUCT FACTORY
 class ProductFactory {
    //
-   static productRegistry: productRegistryType = {}
+   private static productRegistry: productRegistryType = {}
    //
-   static registerProductType(type: string, classRef: any) {
+   public static registerProductType(type: string, classRef: any) {
       ProductFactory.productRegistry[type] = classRef
    }
 
@@ -95,6 +95,7 @@ class Product {
    protected product_rating: object | number
    protected product_variations: any
    protected location: string
+   //
    constructor({
       name,
       type,
@@ -165,10 +166,6 @@ class Clothing extends Product {
       //
       return newProduct
    }
-   // UPDATE
-   // async updateProduct(productId: string, bodyUpdate: object) {
-
-   // }
 }
 class Electronic extends Product {
    async createProduct() {
@@ -203,8 +200,47 @@ class Furniture extends Product {
    }
 }
 //
+class Laptop extends Product {
+   async createProduct() {
+      //
+      if (!this.attributes) throw new BadRequestError('Missing Attributes')
+      const newProduct = await super.createProduct()
+      //
+      if (!newProduct) throw new BadRequestError('Failed Create  Product!')
+      //
+      const newLaptop = await LaptopModel.create({
+         ...this.attributes,
+         _id: newProduct._id,
+         shop_id: this.shop_id,
+      })
+      if (!newLaptop) throw new BadRequestError('Failed Create Laptop Product!')
+      //
+      return newProduct
+   }
+}
+//
+class Phone extends Product {
+   async createProduct() {
+      if (!this.attributes) throw new BadRequestError('Missing Attributes')
+      const newProduct = await super.createProduct()
+      if (!newProduct) throw new BadRequestError('Failed Create  Product!')
+      //
+      const newLaptop = await PhoneModel.create({
+         ...this.attributes,
+         _id: newProduct._id,
+         shop_id: this.shop_id,
+      })
+      if (!newLaptop) throw new BadRequestError('Failed Create PhoneProduct!')
+      //
+      return newProduct
+      //
+   }
+}
+//
 ProductFactory.registerProductType(TypeProduct.Electronic, Electronic)
 ProductFactory.registerProductType(TypeProduct.Clothing, Clothing)
 ProductFactory.registerProductType(TypeProduct.Furniture, Furniture)
-
+ProductFactory.registerProductType(TypeProduct.Laptop, Laptop)
+ProductFactory.registerProductType(TypeProduct.Phone, Phone)
+//
 export default new ProductFactory()

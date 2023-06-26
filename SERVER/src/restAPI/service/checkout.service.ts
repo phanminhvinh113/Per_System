@@ -105,7 +105,7 @@ class CheckoutService {
          acquireProduct.push(keyLock ? true : false)
       }
       //If there exists an out-of-stock product
-      //
+
       if (acquireProduct.includes(false)) throw new BadRequestError('Some Products Updated!, Please Back To Cart')
       //Add Into Order
       const new_order = await orderModel.create({

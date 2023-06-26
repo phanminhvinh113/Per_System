@@ -23,9 +23,9 @@ class accessService {
             if (await checkExistUser(email)) {
                throw new BadRequestError('Error:Email already!')
             }
-            //
+            //hashing password
             const hashPassword = bcrypt.hashSync(password, 10)
-            //
+            // create new user
             const new_user = await UserModel.create({
                name,
                email,
@@ -58,6 +58,7 @@ class accessService {
                   },
                })
             }
+            // Error Create Token
             if (!token) {
                return resolve({
                   code: 0,
@@ -73,22 +74,18 @@ class accessService {
          }
       })
    //
-   registerSellerService = ({ userId, password, IP_Device, Device }: User) =>
+   registerSellerService = ({ userId, IP_Device, Device }: User) =>
       new Promise(async (resolve, reject) => {
          try {
             // ERROR
-            if (!userId || !password) throw new Error('Missing Parameter')
+            if (!userId) throw new Error('Missing Parameter')
             //Check User Exist
             const _user: any = await findUserById(userId)
             if (!_user) throw new BadRequestError('Error:User not already!')
             //Check Account Register Seller
             if (_user.roles.includes(ROLES.SELLER)) throw new BadRequestError('The account has been registered as a seller')
-            //Check Password
-            const matchPassword = bcrypt.compareSync(password, _user.password)
-            if (!matchPassword) throw new AuthFailedError('Incorrect Password:X_01')
             //Update User
-            const new_seller = await UserModel.findOneAndUpdate({ _id: new Types.ObjectId(userId) }, { $push: { roles: ROLES.SELLER } })
-
+            const new_seller = await UserModel.findOneAndUpdate({ _id: new Types.ObjectId(userId) }, { $push: { roles: ROLES.SELLER }, verify: true })
             // ERROR CREATE NEW USER
             if (!new_seller) throw new Error('Failed!')
             // CREATE PRIVATE AND PUBLIC KEY
@@ -103,9 +100,9 @@ class accessService {
             //
             if (!publicKeyString) throw new Error('PublicKey Error!')
             // CREATE TOKENS
-            console.log('roles:::', new_seller.roles)
+
             const new_roles = Array.isArray(new_seller.roles) ? new_seller.roles.push(ROLES.SELLER) : new_seller.roles
-            console.log('new roles:::', new_roles)
+
             const tokens = await createTokenPair({ userId: new_seller._id, roles: new_roles }, publicKey, privateKey)
             if (tokens) {
                return resolve({

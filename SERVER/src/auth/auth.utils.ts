@@ -38,18 +38,19 @@ export const VerifyToken = async (token: string, publicKey: string) => {
 }
 // AUTH FOR USER
 export const Authentication = asyncHandler(async (req: Request, _res: Response, next: NextFunction) => {
-   //1
+   //1 Find User IN System
    const userId: any = req.headers[HEADER.CLIENT_ID]
    if (!userId) throw new AuthFailedError('Invalid Request')
-   //2
+   //2 Check Token User Exist in DB
    const keyStore: any = await keyTokenService.findByUserId(userId)
    if (!keyStore) throw new NotFoundError('Invalid Key Store!')
-   //3
+   //3 Check Access Token
    const accessToken = req.headers[HEADER.AUTHORIZATION]
    if (!accessToken) throw new AuthFailedError('Invalid Request(MS TOKEN)')
-   //4
+   //4 Decode And Verify User
    try {
       const decodeJWT = await VerifyToken(accessToken, keyStore.publicKey)
+      // Check Permission User
       if (decodeJWT.userId === userId) {
          //
          req.keyStore = keyStore
@@ -77,13 +78,14 @@ export const AuthenticationSeller = asyncHandler(async (req: Request, _res: Resp
    //4
    try {
       const decodeJWT = await VerifyToken(accessToken, keyStore.publicKey)
+      // Pass If User's Permission Seller
       if (decodeJWT.userId === userId && decodeJWT.roles?.includes(ROLES.SELLER)) {
          //
          req.keyStore = keyStore
          req.User = decodeJWT
          //
          return next()
-      } else throw new AuthFailedError(decodeJWT.message || 'Unauthorized User')
+      } else throw new AuthFailedError(decodeJWT.message || 'Unauthorized Seller')
       //
    } catch (error) {
       throw error
@@ -110,7 +112,7 @@ export const AuthenticationAdmin = asyncHandler(async (req: Request, _res: Respo
          req.User = decodeJWT
          //
          return next()
-      } else throw new AuthFailedError(decodeJWT.message || 'Unauthorized User')
+      } else throw new AuthFailedError(decodeJWT.message || 'Unauthorized Admin')
       //
    } catch (error) {
       throw error

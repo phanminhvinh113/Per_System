@@ -52,7 +52,7 @@ export const HEADER = Object.freeze({
    CLIENT_ID: 'x-client-id',
    AUTHORIZATION: 'authorization',
 })
-export const Enum_Type_Products = ['Electronic', 'Clothing', 'Furniture', 'Sport', 'Food', 'Cosmetics', 'Fashion']
+export const Enum_Type_Products = ['Electronic', 'Clothing', 'Furniture', 'Sport', 'Food', 'Cosmetics', 'Fashion', 'Phone', 'Laptop']
 
 export const TypeProduct = Object.freeze({
    Electronic: 'Electronic',
@@ -62,6 +62,8 @@ export const TypeProduct = Object.freeze({
    Food: 'Food',
    Cosmetics: 'Cosmetics',
    Fashion: 'Fashion',
+   Laptop: 'Laptop',
+   Phone: 'Phone',
 })
 export const orderStatusEnum: string[] = ['pending', 'confirmed', 'shipped', 'cancelled']
 export const orderStatus = Object.freeze({

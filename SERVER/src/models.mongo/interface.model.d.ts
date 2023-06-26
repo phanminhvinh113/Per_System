@@ -38,6 +38,34 @@ export interface FurnitureType {
    material: string
    shop_id: string | Types.ObjectId
 }
+export interface LaptopType {
+   shop_id: string | Types.ObjectId
+   brand: string
+   cpu: string
+   disk: number
+   camera: string
+   screen_size: number
+   ram: number
+   graphics_card: string
+   special_features: string[]
+   material: string
+}
+export interface PhoneType {
+   shop_id: string | Types.ObjectId
+   brand: string
+   demand: string[]
+   chip: string
+   memory: string
+   camera: string
+   sweep_frequency: number
+   screen_size: number
+   screen_type: string
+   ram: number
+   special_features: string[]
+   operating_system: string
+   material: string
+}
+/////////////////////////////////////
 export interface DiscountUserUsed {
    user_id: Types.ObjectId | string
    amount: number
