@@ -19,11 +19,6 @@ const routesDefaultPage: routerType[] = [
     },
     { path: '/login', title: 'login', element: <Login /> },
     {
-        path: '/cart',
-        title: 'cart',
-        element: <Cart />,
-    },
-    {
         path: '*',
         title: '404 page',
         element: <Navigate to="/404" replace />,

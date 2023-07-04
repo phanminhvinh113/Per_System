@@ -8,11 +8,19 @@ interface User {
     role: string;
 }
 export interface userState {
-    userInfo: object;
+    userInfo: User | object;
+    isLogin: boolean;
 }
 const initialState: userState = {
-    userInfo: {},
+    userInfo: {
+        name: '',
+        email: '',
+        id: '',
+        role: 'admin',
+    },
+    isLogin: false,
 };
+//
 const reducers = {
     handleLogout: (state: userState) => {
         state.userInfo = {};
@@ -21,6 +29,7 @@ const reducers = {
         state.userInfo = action.payload;
     },
 };
+//
 export const userSlice = createSlice({
     name: 'user',
     initialState,

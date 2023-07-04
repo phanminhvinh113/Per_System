@@ -21,13 +21,11 @@ const store = configureStore({
         user: persistedReducer,
     },
     devTools: { trace: true, traceLimit: 25 },
-    middleware: [
-        ...getDefaultMiddleware({
-            serializableCheck: {
-                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-            },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         }),
-    ],
 });
 //
 const persistor = persistStore(store);
