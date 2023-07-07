@@ -1,5 +1,4 @@
 import { routerType } from '../../types/router.types';
-
 import Cart from '../cart/Cart.page';
 
 //

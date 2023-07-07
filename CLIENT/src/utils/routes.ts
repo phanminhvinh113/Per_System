@@ -3,7 +3,7 @@ const routes = Object.freeze({
     Home: '/',
     Login: '/login',
     Register: '/register',
-    Card: '/card',
+    Cart: '/cart',
     Manage_User: '/manage_user',
     Comment: '/comment',
 });

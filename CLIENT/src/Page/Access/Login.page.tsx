@@ -1,8 +1,9 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import InputFill from '../../components/custom/InputFill';
 import { TypeInput, UserInputLogin } from './interface';
 import { GoogleLogin, useGoogleLogin, CredentialResponse } from '@react-oauth/google';
+import { Button } from '../../components/styledDefault/Button';
 //
 interface LoginProps {}
 //
@@ -35,6 +36,10 @@ const Login: FC<LoginProps> = (props) => {
         password: { type: 'password', value: '' },
         confirmPassword: { type: 'password', value: '' },
     });
+
+    const inputRef1 = useRef<HTMLInputElement>(null);
+    const inputRef2 = useRef<HTMLInputElement>(null);
+
     // ON CHANGE INPUT
     const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -56,11 +61,18 @@ const Login: FC<LoginProps> = (props) => {
             [key, field.value],
         );
     });
-
+    //
+    const handleSubmitForm = () => {
+        console.log(inputRef1.current?.value);
+        console.log(inputRef2.current?.value);
+    };
     return (
         <LoginWrapper>
             {InputToFill}
+            <input ref={inputRef1} placeholder="test1..." />
+            <input ref={inputRef2} placeholder="test2..." />
             <LoginByGoogle />
+            <Button onClick={handleSubmitForm}>Submit</Button>
         </LoginWrapper>
     );
 };

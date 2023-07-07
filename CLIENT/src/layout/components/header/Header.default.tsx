@@ -24,7 +24,9 @@ const HeaderDefault: FC<Props> = () => {
                 <Link to={routes.Home}>Your Account</Link>
             </HomeIcon>
             <Cart>
-                <img src={cartIcon} />
+                <Link to={routes.Cart}>
+                    <img src={cartIcon} />
+                </Link>
                 <span>2</span>
             </Cart>
         </Header>

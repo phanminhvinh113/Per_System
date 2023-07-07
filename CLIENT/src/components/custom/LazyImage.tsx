@@ -44,7 +44,7 @@ const LazyImage: FC<LazyImageProps> = (props) => {
         };
     }, [src]);
 
-    return <Image {...props} ref={imageRef} alt={alt} />;
+    return <Image {...props} ref={imageRef} alt={alt} src={defaultImage} />;
 };
 
 export default memo(LazyImage);

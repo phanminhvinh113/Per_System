@@ -1,19 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import HeaderDefault from '../../layout/components/header/Header.default';
-import GlobalFont from '../../assets/font/GlobalFont';
 import Skeleton, { SkeletonTheme } from '../../components/custom/Skeleton';
 import axios from 'axios';
 import Animal from './Animal';
 import { useNavigate } from 'react-router-dom';
-import Outstanding from '../../layout/components/sidebar/Outstanding';
 import { DefaultLayout } from '../../layout';
-import DatePicker from '../../components/DatePikcer/DatePicker';
-import dayjs from 'dayjs';
+import ToggleSwitches from '../../components/button/ToggleSwitches';
 
 interface HomeProps {}
 //
-interface stateStyle {
+interface stateInterface {
     listAnimal: any[];
     isLoading: boolean;
     limit: number;
@@ -21,7 +17,7 @@ interface stateStyle {
 //
 const Home = () => {
     //
-    const [{ isLoading, listAnimal, limit }, setState] = useState<stateStyle>({
+    const [{ isLoading, listAnimal, limit }, setState] = useState<stateInterface>({
         listAnimal: [],
         isLoading: false,
         limit: 5,
@@ -36,61 +32,42 @@ const Home = () => {
             isLoading: true,
         }));
         //
-        setTimeout(async () => {
-            const { data } = await axios({
-                method: 'get',
-                url: `https://dog.ceo/api/breed/hound/images/random/${limit}`,
-            });
-            if (!data) throw Error('Data Missing');
-
-            setState((prev) => ({
-                ...prev,
-                isLoading: false,
-                listAnimal: [...prev.listAnimal, ...data.message],
-            }));
-        }, 2000);
-        //
-    };
-    //
-    const handleIntersection: IntersectionObserverCallback = (entries, observer) => {
-        entries.forEach(async (entry) => {
-            if (entry.isIntersecting) {
-                console.log(entries);
-                await getAnimal();
-            }
+        const { data } = await axios({
+            method: 'get',
+            url: `https://dog.ceo/api/breed/hound/images/random/${limit}`,
         });
+        if (!data) throw Error('Data Missing');
+        setState((prev) => ({
+            ...prev,
+            isLoading: false,
+            listAnimal: [...prev.listAnimal, ...data.message],
+        }));
     };
     //
     useEffect(() => {
         getAnimal();
     }, []);
     //
+    const handleIntersection: IntersectionObserverCallback = (entries, observer) => {
+        entries.forEach(async (entry) => {
+            if (entry.isIntersecting) {
+                await getAnimal();
+            }
+        });
+    };
+    //
     useEffect(() => {
-        //
-        const options = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1,
-        };
-        //
-        const observer = new IntersectionObserver(handleIntersection, options);
+        const observer = new window.IntersectionObserver(handleIntersection);
         if (refAnimal && refAnimal.current) {
             observer.observe(refAnimal.current);
         }
-        //
         return () => observer.disconnect();
-    }, [isLoading, listAnimal]);
-
-    const animalContent = useMemo(() => {
-        return listAnimal.map((animal: any, index) => {
-            return index + 1 === listAnimal.length ? (
-                <Animal key={index} ref={refAnimal} animal={animal} />
-            ) : (
-                <Animal key={index} animal={animal} />
-            );
-        });
     }, [listAnimal]);
-    //
+
+    const animalContent = listAnimal.map((animal: any, index) => {
+        return <Animal key={index} ref={index === listAnimal.length - 1 ? refAnimal : null} animal={animal} />;
+    });
+
     const skeletonMemo = (
         <SkeletonTheme repeat={2} borderRadius={10} width="500px">
             <Skeleton circle={true} size_circle="75px" />
@@ -98,14 +75,11 @@ const Home = () => {
             <Skeleton count={2} height="20px" borderRadius={5} />
         </SkeletonTheme>
     );
-    //
-    const [date, setDate] = useState(dayjs());
 
-    //
     return (
         <HomePage>
             <DefaultLayout>
-                <DatePicker />
+                <ToggleSwitches />
                 {!!listAnimal.length && animalContent}
                 {isLoading && skeletonMemo}
             </DefaultLayout>
