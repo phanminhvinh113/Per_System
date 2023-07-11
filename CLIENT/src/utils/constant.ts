@@ -16,5 +16,6 @@ export const DEFAULT_PROPS_SKELETON = Object.freeze({
     size_circle: '50px',
     margin: '20px',
     repeat: 1,
-    width_theme: '400px',
+    width_theme: '100%',
+    float: 'left',
 });

@@ -6,9 +6,10 @@ interface LazyImageProps {
     src: string;
     alt?: string;
     circle?: boolean;
-    height?: number;
-    width?: number;
+    height?: string;
+    width?: string;
     size_circle?: number;
+    borderRadius?: number;
     style?: React.CSSProperties;
 }
 //
@@ -16,9 +17,10 @@ interface ImageStyleProps {
     src?: string;
     alt?: string;
     circle?: boolean;
-    height?: number;
-    width?: number;
+    height?: string;
+    width?: string;
     size_circle?: number;
+    borderRadius?: number;
 }
 const LazyImage: FC<LazyImageProps> = (props) => {
     const { src, alt } = props;
@@ -56,7 +58,7 @@ const Wrapper = styled.div`
 `;
 //
 const Image = styled.img<ImageStyleProps>`
-    height: ${({ circle, height = 200, size_circle = 50 }) => (circle ? size_circle : height)}px;
-    width: ${({ circle, width = 200, size_circle = 50 }) => (circle ? size_circle : width)}px;
-    border-radius: ${({ circle }) => (circle ? '50%' : 0)};
+    height: ${({ circle, height = '100%', size_circle = 50 }) => (circle ? size_circle + 'px' : height)};
+    width: ${({ circle, width = '100%', size_circle = 50 }) => (circle ? size_circle + 'px' : width)};
+    border-radius: ${({ circle, borderRadius }) => (circle ? '50%' : borderRadius + 'px')};
 `;

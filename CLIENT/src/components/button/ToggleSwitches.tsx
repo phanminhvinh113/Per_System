@@ -3,20 +3,32 @@ import styled from 'styled-components';
 
 interface IToggleSwitchesProps {
     size?: number;
+    handleOnClick: () => void | undefined;
 }
+//DEFAULT VALUE
+const StandardValue = {
+    WIDTH_SWITCH: 60,
+    HEIGHT_SWITCH: 34,
+    SIZE: 26,
+    LEFT_DISTANCE: 5,
+    RIGHT_DISTANCE: 30,
+};
+// DEFAULT PROPS
 const defaultProps: IToggleSwitchesProps = {
-    size: 26,
+    size: StandardValue.SIZE,
+    handleOnClick: () => {},
 };
 
-const ToggleSwitches: FC<IToggleSwitchesProps> = ({ size = 26 }) => {
+const ToggleSwitches: FC<IToggleSwitchesProps> = ({ size = StandardValue.SIZE, handleOnClick }) => {
     const [checked, setChecked] = useState<boolean>(false);
     //
     const handleToggle = () => {
+        handleOnClick();
         setChecked(!checked);
     };
     //
     return (
-        <SwitchContainer onClick={handleToggle}>
+        <SwitchContainer onClick={handleToggle} $size={size}>
             <HiddenCheckbox checked={checked} onChange={handleToggle} />
             <StyledSwitch checked={checked}>
                 <StyledSlider checked={checked} $size={size} />
@@ -29,11 +41,17 @@ ToggleSwitches.defaultProps = defaultProps;
 //
 export default ToggleSwitches;
 //
-const SwitchContainer = styled.div`
+interface StyledProps {
+    checked?: boolean;
+    $size: number;
+}
+
+//
+const SwitchContainer = styled.div<StyledProps>`
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: ${({ $size }) => ($size * StandardValue.WIDTH_SWITCH) / StandardValue.SIZE + 'px'};
+    height: ${({ $size }) => ($size * StandardValue.HEIGHT_SWITCH) / StandardValue.SIZE + 'px'};
     &:hover {
         cursor: pointer;
         opacity: 0.9;
@@ -50,9 +68,8 @@ const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
 `;
 //
 interface StyledSwitchProps {
-    checked: boolean;
+    checked?: boolean;
 }
-
 const StyledSwitch = styled.div<StyledSwitchProps>`
     display: flex;
     align-items: center;
@@ -65,12 +82,7 @@ const StyledSwitch = styled.div<StyledSwitchProps>`
     transition: all 0.5s linear;
 `;
 
-interface StyledSliderProps {
-    checked: boolean;
-    $size: number;
-}
-
-const StyledSlider = styled.span<StyledSliderProps>`
+const StyledSlider = styled.span<StyledProps>`
     position: absolute;
     content: '';
     height: ${({ $size }) => $size + 'px'};
@@ -79,6 +91,8 @@ const StyledSlider = styled.span<StyledSliderProps>`
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: 0.4s all ease-in-out;
-    transform: translateX(${({ checked }) => (checked ? '5px' : '0px')});
-    left: ${({ checked }) => (checked ? '0px' : '30px')};
+    left: ${({ checked, $size }) =>
+        checked
+            ? ($size * StandardValue.LEFT_DISTANCE) / StandardValue.SIZE + 'px'
+            : ($size * StandardValue.RIGHT_DISTANCE) / StandardValue.SIZE + 'px'};
 `;

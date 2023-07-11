@@ -86,6 +86,8 @@ const shimmerRTL = keyframes`
 const SkeletonStyle = styled.div<SkeletonProps>`
     position: relative;
     margin: 5px 0;
+    display: flex;
+    justify-content: flex-start;
     height: ${({ height, circle, size_circle }) => (circle ? size_circle : height)};
     width: ${({ width, circle, size_circle }) => (circle ? size_circle : width)};
     background-color: ${({ backgroundColor }) => backgroundColor};
