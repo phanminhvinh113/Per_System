@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Product from './Product';
 import Skeleton, { SkeletonTheme } from '../../components/custom/Skeleton';
@@ -16,38 +16,42 @@ const ProductSuggest: FunctionComponent<IProductProps> = () => {
     //
     const getProduct = async () => {
         setIsLoading(true);
-        //
-        const { data } = await axios({
-            method: 'get',
-            url: `https://dog.ceo/api/breed/hound/images/random/20`,
-        });
-        if (!data) throw Error('Data Missing');
-        setListProduct((prev) => [...prev, ...data.message]);
-        setIsLoading(false);
+        setTimeout(async () => {
+            //
+            const { data } = await axios({
+                method: 'get',
+                url: `https://dog.ceo/api/breed/hound/images/random/20`,
+            });
+            if (!data) throw Error('Data Missing');
+            setListProduct((prev) => [...prev, ...data.message]);
+            setIsLoading(false);
+        }, 2000);
     };
     //
     useEffect(() => {
         getProduct();
     }, []);
+    // Skeleton for waiting loading new product
+    const SkeletonProduct = (
+        <Container>
+            {new Array(12).fill(0).map((_, index) => (
+                <Item key={index}>
+                    <SkeletonTheme borderRadius={15}>
+                        <Skeleton height="125px" borderRadius={20} style={{ marginTop: '-10px' }} />
+                        <Skeleton borderRadius={5} width="80%" style={{ marginTop: '10px' }} />
+                        <Skeleton borderRadius={5} width="65%" />
+                        <SkeletonBetween>
+                            <Skeleton borderRadius={5} width="30%" />
+                            <Skeleton borderRadius={5} width="40%" />
+                        </SkeletonBetween>
+                    </SkeletonTheme>
+                </Item>
+            ))}
+        </Container>
+    );
     //
-    if (isLoading)
-        return (
-            <Container>
-                {new Array(12).fill(0).map((_, index) => (
-                    <Item key={index}>
-                        <SkeletonTheme borderRadius={15}>
-                            <Skeleton height="125px" borderRadius={20} style={{ marginTop: '-10px' }} />
-                            <Skeleton borderRadius={5} width="80%" style={{ marginTop: '10px' }} />
-                            <Skeleton borderRadius={5} width="65%" />
-                            <SkeletonBetween>
-                                <Skeleton borderRadius={5} width="30%" />
-                                <Skeleton borderRadius={5} width="40%" />
-                            </SkeletonBetween>
-                        </SkeletonTheme>
-                    </Item>
-                ))}
-            </Container>
-        );
+    // const lisProducts = useMemo(() =>
+    // ,)
     //
     return (
         <ProductWrapper>
@@ -60,6 +64,7 @@ const ProductSuggest: FunctionComponent<IProductProps> = () => {
                         getMoreProduct={getProduct}
                     />
                 ))}
+                {isLoading && SkeletonProduct}
             </Container>
         </ProductWrapper>
     );

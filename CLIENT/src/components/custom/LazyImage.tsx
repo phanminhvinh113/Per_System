@@ -1,6 +1,7 @@
 import { FC, memo, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import defaultImage from '../../assets/images/home/default-image.jpg';
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 
 interface LazyImageProps {
     src: string;
@@ -27,24 +28,11 @@ const LazyImage: FC<LazyImageProps> = (props) => {
     //
     const imageRef = useRef<HTMLImageElement>(null);
     //
+    const entry = useIntersectionObserver(imageRef);
+    //
     useEffect(() => {
-        //
-        const observer = new window.IntersectionObserver((entires) => {
-            entires.forEach((entry) => {
-                if (entry.isIntersecting && imageRef.current) {
-                    imageRef.current.src = src;
-                    observer.unobserve(imageRef.current);
-                }
-            });
-        });
-        //
-        const img = imageRef.current;
-        if (img) observer.observe(img);
-        //
-        return () => {
-            if (img) observer.unobserve(img);
-        };
-    }, [src]);
+        if (entry?.isIntersecting && imageRef.current) imageRef.current.src = src;
+    }, [src, entry?.isIntersecting]);
 
     return <Image {...props} ref={imageRef} alt={alt} src={defaultImage} />;
 };

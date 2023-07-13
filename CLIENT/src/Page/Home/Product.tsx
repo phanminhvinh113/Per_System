@@ -2,7 +2,11 @@ import { FC, ForwardedRef, FunctionComponent, forwardRef, useEffect, useImperati
 import styled from 'styled-components';
 import LazyImage from '../../components/custom/LazyImage';
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
-
+//
+type ProductComponent = React.ForwardRefExoticComponent<
+    React.PropsWithoutRef<ProductProps> & React.RefAttributes<ProductRef>
+>;
+//
 interface ProductProps {
     product: string;
     ref?: ForwardedRef<HTMLDivElement>;
@@ -11,9 +15,10 @@ interface ProductProps {
 //
 interface ProductRef {
     getElementRef: () => HTMLDivElement | null;
-}
+} //
+
 //
-const Product: FC<ProductProps> = forwardRef<ProductRef, ProductProps>(({ product, getMoreProduct }, ref) => {
+const Product: ProductComponent = forwardRef<ProductRef, ProductProps>(({ product, getMoreProduct }, ref) => {
     //
     const elementRef = useRef<HTMLDivElement | null>(null);
     //
@@ -21,7 +26,7 @@ const Product: FC<ProductProps> = forwardRef<ProductRef, ProductProps>(({ produc
         getElementRef: () => elementRef.current,
     }));
     //
-    const entry = useIntersectionObserver(elementRef, {});
+    const entry = useIntersectionObserver(elementRef);
 
     useEffect(() => {
         if (entry?.isIntersecting) getMoreProduct();

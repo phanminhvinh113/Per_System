@@ -6,6 +6,9 @@ export const SideBarStyle = styled.div`
     flex-direction: column;
     background-color: #f5f5fa;
     border-radius: 8px;
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 //
 export const ElementStyle = styled.a`

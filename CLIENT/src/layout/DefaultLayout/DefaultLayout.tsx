@@ -62,6 +62,10 @@ const SideBar = styled.div`
     &::-webkit-scrollbar-thumb {
         background: rgba(0, 0, 0, 0.3);
     }
+    // Responsive
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 const Content = styled.div`
     width: calc(100vw - 300px);

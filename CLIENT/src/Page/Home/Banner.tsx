@@ -1,4 +1,4 @@
-import { CSSProperties, FC } from 'react';
+import { CSSProperties, FC, memo, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import useFetch from '../../hooks/useFetch';
@@ -15,23 +15,25 @@ interface SampleButtonProps {
     onClick?: () => void;
 }
 //
-const SampleNextButton: FC<SampleButtonProps> = (props) => {
+const SampleNextButton: FC<SampleButtonProps> = memo((props) => {
+    //
     const { className, style, onClick } = props;
+    //
     return (
         <ButtonSlick className={className} style={style} onClick={onClick} position="right">
             <FontAwesomeIcon icon={faAngleRight} />
         </ButtonSlick>
     );
-};
+});
 //
-const SamplePreviousButton: FC<SampleButtonProps> = (props) => {
+const SamplePreviousButton: FC<SampleButtonProps> = memo((props) => {
     const { className, style, onClick } = props;
     return (
         <ButtonSlick className={className} style={style} onClick={onClick} position="left">
             <FontAwesomeIcon icon={faAngleLeft} />
         </ButtonSlick>
     );
-};
+});
 
 interface BannerProps {}
 const Banner: FC<BannerProps> = () => {
@@ -73,7 +75,7 @@ const Banner: FC<BannerProps> = () => {
         </SlideWrapper>
     );
 };
-export default Banner;
+export default memo(Banner);
 //
 const SlideWrapper = styled.div`
     position: relative;
