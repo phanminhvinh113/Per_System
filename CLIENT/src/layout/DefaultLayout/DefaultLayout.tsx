@@ -6,17 +6,16 @@ import Category from '../components/sidebar/Category';
 
 interface DefaultLayoutProps {
     children: ReactNode;
+    childrenSideBar?: ReactNode;
+    isHiddenHeader?: boolean;
 }
 
-const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
+const DefaultLayout: FC<DefaultLayoutProps> = ({ children, childrenSideBar, isHiddenHeader = false }) => {
     return (
         <Wrapper>
-            <HeaderDefault />
+            {!isHiddenHeader && <HeaderDefault />}
             <Container>
-                <SideBar>
-                    <Outstanding />
-                    <Category />
-                </SideBar>
+                {childrenSideBar && <SideBar>{childrenSideBar}</SideBar>}
                 <Content>{children}</Content>
             </Container>
         </Wrapper>

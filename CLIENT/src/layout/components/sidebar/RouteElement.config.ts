@@ -1,3 +1,4 @@
+import { Component } from 'react';
 // LINK IMAGES FOR OUTSTANDING
 import ChatBot from '../../../assets/images/SideBar/OutStanding/chat-bot.png';
 import Exchange from '../../../assets/images/SideBar/OutStanding/exchange.png';
@@ -30,12 +31,21 @@ import Vehicle from '../../../assets/images/SideBar/Category/vehicle.png';
 import Books from '../../../assets/images/SideBar/Category/book.png';
 import SportPicnic from '../../../assets/images/SideBar/Category/sport-picnic.png';
 import Photography from '../../../assets/images/SideBar/Category/photography.png';
+//
+
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 
 //type
 export interface ElementTypeSideBar {
     imageUrl: string;
     title: string;
     path: string;
+}
+//
+export interface ELementStyleSeller {
+    icon: FontAwesomeIconProps;
+    title: string;
 }
 //
 export const RouteElementOutstanding: ElementTypeSideBar[] = [
@@ -191,5 +201,12 @@ export const RouteElementCategory: ElementTypeSideBar[] = [
         imageUrl: Photography,
         title: 'Photography',
         path: '/photography',
+    },
+];
+
+export const RouteElementSideBarSeller: ELementStyleSeller[] = [
+    {
+        icon: { icon: ['fas', 'rocket'] },
+        title: 'Rocket',
     },
 ];

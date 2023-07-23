@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Product from './Product';
-import Skeleton, { SkeletonTheme } from '../../components/custom/Skeleton';
+import Skeleton, { SkeletonTheme } from '../../components/skeleton/Skeleton';
 import axios from 'axios';
 
 interface IProductProps {}

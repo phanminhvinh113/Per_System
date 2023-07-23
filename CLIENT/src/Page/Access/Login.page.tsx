@@ -1,9 +1,10 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import InputFill from '../../components/custom/InputFill';
+import InputFill from '../../components/input/InputFill';
 import { TypeInput, UserInputLogin } from './interface';
 import { GoogleLogin, useGoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { Button } from '../../components/styledDefault/Button';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 //
 interface LoginProps {}
 //
@@ -29,6 +30,8 @@ const LoginByGoogle: FC<GoogleLoginProps> = ({ useOneTap = false }) => {
 };
 //
 const Login: FC<LoginProps> = (props) => {
+    //
+    useDocumentTitle('Login');
     //
     const [inputState, setInputState] = useState<UserInputLogin>({
         email: { type: 'text', value: '' },

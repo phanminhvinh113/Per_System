@@ -1,33 +1,33 @@
-import { FC, ForwardedRef, FunctionComponent, forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import styled from 'styled-components';
-import LazyImage from '../../components/custom/LazyImage';
+import LazyImage from '../../components/image/LazyImage';
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
-//
+//DEFINE FOR PRODUCT COMPONENT
 type ProductComponent = React.ForwardRefExoticComponent<
     React.PropsWithoutRef<ProductProps> & React.RefAttributes<ProductRef>
 >;
-//
+//INTERFACE PROPS
 interface ProductProps {
     product: string;
     ref?: ForwardedRef<HTMLDivElement>;
     getMoreProduct: () => void;
 }
-//
+//INTERFACE REF
 interface ProductRef {
     getElementRef: () => HTMLDivElement | null;
 } //
 
 //
 const Product: ProductComponent = forwardRef<ProductRef, ProductProps>(({ product, getMoreProduct }, ref) => {
-    //
+    //Ref
     const elementRef = useRef<HTMLDivElement | null>(null);
     //
     useImperativeHandle(ref, () => ({
         getElementRef: () => elementRef.current,
     }));
-    //
+    //Infinite Scroll with Intersection
     const entry = useIntersectionObserver(elementRef);
-
+    //
     useEffect(() => {
         if (entry?.isIntersecting) getMoreProduct();
     }, [entry?.isIntersecting, elementRef]);
@@ -45,7 +45,7 @@ const Product: ProductComponent = forwardRef<ProductRef, ProductProps>(({ produc
 });
 
 export default Product;
-//
+//STYLE
 const ProductWrapper = styled.div`
     flex: 1 0 20%;
     margin: 10px;

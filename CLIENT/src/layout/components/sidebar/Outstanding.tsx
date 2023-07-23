@@ -2,7 +2,7 @@ import { FC, memo } from 'react';
 import { RouteElementOutstanding } from './RouteElement.config';
 import { Link, useNavigate } from 'react-router-dom';
 import { ElementStyle, SideBarStyle, Title, Image } from './SideBar.style';
-import LazyImage from '../../../components/custom/LazyImage';
+import LazyImage from '../../../components/image/LazyImage';
 
 interface OutstandingProps {}
 

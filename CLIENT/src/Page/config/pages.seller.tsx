@@ -1,12 +1,13 @@
 import { routerType } from '../../types/router.types';
 import NotFoundPage from '../home/NotFound.page';
 import { Navigate } from 'react-router-dom';
-import User from '../admin/User.page';
+import Seller from '../seller/Seller.page';
+
 const routesSellerPage: routerType[] = [
     {
         path: '/home',
         title: 'Seller Page',
-        element: <User />,
+        element: <Seller />,
     },
     {
         path: '*',

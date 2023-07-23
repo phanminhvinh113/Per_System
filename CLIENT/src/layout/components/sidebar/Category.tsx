@@ -2,7 +2,7 @@ import { FC, memo } from 'react';
 import { RouteElementCategory } from './RouteElement.config';
 import { useNavigate } from 'react-router-dom';
 import { ElementStyle, SideBarStyle, Title, Image } from './SideBar.style';
-import LazyImage from '../../../components/custom/LazyImage';
+import LazyImage from '../../../components/image/LazyImage';
 
 interface CategoryProps {}
 

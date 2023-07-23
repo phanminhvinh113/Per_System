@@ -7,7 +7,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import styled, { css } from 'styled-components';
-import Skeleton, { SkeletonTheme } from '../../components/custom/Skeleton';
+import Skeleton, { SkeletonTheme } from '../../components/skeleton/Skeleton';
 //CUSTOM BUTTON FOR SLIDE
 interface SampleButtonProps {
     className?: string;
