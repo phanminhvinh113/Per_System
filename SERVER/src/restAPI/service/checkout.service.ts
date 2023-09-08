@@ -3,7 +3,7 @@ import { BadRequestError, ConflictRequestError, NotFoundError } from '../../core
 import { findCartId, removeProductsInCart } from '../../models.mongo/repositories/cart.repo'
 import { getAllOrderByUser, getOneOrderByUser, updateStatusOrder } from '../../models.mongo/repositories/checkout.repo'
 import { ROLES, StatusCode, orderStatus } from '../../utils/constant'
-import { acquireLock, releaseLock } from './redis.service'
+import { acquireLock, releaseLock } from './redis/redis.init.service'
 import { checkProductByServer } from '../../models.mongo/repositories/product.repo'
 import discountUserService from './discount.service/discount.user.service'
 import { CheckoutServiceType, OrderByUserType, ProductServeType } from '../interface/checkout.interface'

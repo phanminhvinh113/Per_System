@@ -1,10 +1,14 @@
 import { ReasonStatusCode, StatusCode } from '../utils/constant'
+import { Response } from 'express'
 
-class ErrorResponse extends Error {
-   status: number | string
-   constructor(message: string, status: number | string) {
+export class ErrorResponse extends Error {
+   status: number
+   constructor(message: string, status: number) {
       super(message)
       this.status = status
+   }
+   public send(res: Response) {
+      return res.status(this.status).json(this)
    }
 }
 

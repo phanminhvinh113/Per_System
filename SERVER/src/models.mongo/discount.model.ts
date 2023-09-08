@@ -12,7 +12,6 @@ const userUsedSchema = new mongoose.Schema<DiscountUserUsed>(
    }
 )
 
-//
 const discountSchema = new mongoose.Schema<DiscountType>(
    {
       shop_id: { type: Schema.Types.ObjectId, ref: 'User', require: true },

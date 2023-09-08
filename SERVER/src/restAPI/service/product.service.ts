@@ -78,6 +78,7 @@ class ProductFactory {
 }
 
 class Product {
+   // define properties
    protected name: string
    protected type: string[] | string
    protected thumb: string
@@ -95,7 +96,7 @@ class Product {
    protected product_rating: object | number
    protected product_variations: any
    protected location: string
-   //
+   // constructor
    constructor({
       name,
       type,
@@ -132,7 +133,7 @@ class Product {
       this.product_variations = product_variations
    }
    // Create New Product
-   async createProduct() {
+   public async createProduct() {
       const product = await ProductModel.create(this)
       if (product) {
          const inventory = {

@@ -1,27 +1,37 @@
 import { ReasonStatusCode, StatusCode } from '../utils/constant'
-
-class SuccessResponse {
+import { Response } from 'express'
+//
+interface ResponseType {
+   message: string
+   statusCode?: number
+   reasonStatusCode?: string
+   data: any
+}
+//
+export class SuccessResponse {
+   //
    message: string
    status: number
    reasonStatusCode: string
    data: any
-   constructor(message: string, statusCode: number = StatusCode.SUCCESS, reasonStatusCode: string = ReasonStatusCode.SUCCESS, data: any = {}) {
+   //
+   constructor({ message, statusCode = StatusCode.SUCCESS, reasonStatusCode = ReasonStatusCode.SUCCESS, data = {} }: ResponseType) {
       this.message = !message ? reasonStatusCode : message
       this.status = statusCode
       this.data = data
    }
-   send(res: any, _headers: object = {}) {
+   public send(res: Response, _headers: object = {}) {
       return res.status(this.status).json(this)
    }
 }
 export class SUCCESS extends SuccessResponse {
-   constructor(message: string, data: any) {
-      super(message, data)
+   constructor({ message, data }: ResponseType) {
+      super({ message, data })
    }
 }
 
 export class COMPLETED extends SuccessResponse {
-   constructor(message: string, statusCode: number = StatusCode.COMPLETED, reasonStatusCode: string = ReasonStatusCode.COMPLETED, data: any) {
-      super(message, statusCode, reasonStatusCode, data)
+   constructor({ message, statusCode = StatusCode.COMPLETED, reasonStatusCode = ReasonStatusCode.COMPLETED, data }: ResponseType) {
+      super({ message, statusCode, data, reasonStatusCode })
    }
 }

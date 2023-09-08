@@ -4,12 +4,12 @@ dotenv.config()
 //
 const port: number = process.env?.PORT_REDIS_CLOUD ? +process.env.PORT_REDIS_CLOUD : 11579
 
-const redis = new Redis({
-   host: process.env.HOST_REDIS_CLOUD,
-   port,
-   password: process.env.PASSWORD_REDIS_CLOUD,
-})
-//const redis = new Redis({ host: 'localhost', port: 6379 })
+// const redis = new Redis({
+//    host: process.env.HOST_REDIS_CLOUD,
+//    port,
+//    password: process.env.PASSWORD_REDIS_CLOUD,
+// })
+const redis = new Redis({ host: 'localhost', port: 6379 })
 //
 export const ConnectRedis = async () => {
    //

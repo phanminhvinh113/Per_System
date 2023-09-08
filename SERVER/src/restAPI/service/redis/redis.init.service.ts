@@ -1,7 +1,7 @@
 import { Types } from 'mongoose'
-import { reservationInventory } from '../../models.mongo/repositories/inventory.repo'
-import redis from '../connections/init.redis'
-import { BadRequestError, ConflictRequestError } from '../../core/error.response'
+import { reservationInventory } from '../../../models.mongo/repositories/inventory.repo'
+import redis from '../../connections/init.redis'
+import { BadRequestError, ConflictRequestError } from '../../../core/error.response'
 
 //
 
