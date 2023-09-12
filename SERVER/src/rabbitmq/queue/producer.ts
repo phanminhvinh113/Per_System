@@ -1,27 +1,31 @@
 import amqplib from 'amqplib'
 require('dotenv').config()
 //
-//const ampq_url_docker: string = process.env?.AMQP_URL_DOCKER || ''
-const ampq_url_cloud: string = process.env?.AMQP_URL_CLOUD?.toString() || ''
+const ampq_url_docker: string = process.env?.AMQP_URL_DOCKER || 'amqp://guest:phanminhvinh2003@localhost'
+//const ampq_url_cloud: string = process.env?.AMQP_URL_DOCKER?.toString() || ''
 //
+
 export const sendQueue = async ({ msg }: { msg: string }) => {
    try {
-      //1
-      const connect = await amqplib.connect(ampq_url_cloud)
-      //2
-      const chanel = await connect.createChannel()
+      //1 connect
+      const connect = await amqplib.connect(ampq_url_docker)
+      //2 create chanel to subscribe
+      const channel = await connect.createChannel()
       //3. create name queue
       const nameQueue: string = 'q_1'
       //
-      await chanel.assertQueue(nameQueue, {
+      await channel.assertQueue(nameQueue, {
          durable: true, // true is when restart doesn't delete data.
       })
       //
-      await chanel.sendToQueue(nameQueue, Buffer.from(msg), {
+      channel.sendToQueue(nameQueue, Buffer.from(msg), {
          expiration: '10000',
          persistent: true,
       })
       //
+      // 6. Close the channel and connection when done
+      await channel.close()
+      await connect.close()
    } catch (error) {
       console.log(error)
    }

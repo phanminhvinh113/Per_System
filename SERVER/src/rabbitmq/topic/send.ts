@@ -12,7 +12,7 @@ export const send = async () => {
       const chanel = await connect.createChannel()
       //3. create name queue
       const nameExchange: string = 'send_mail'
-      //
+      //create  queue flow name declared
       await chanel.assertExchange(nameExchange, 'topic', {
          durable: false, // true is when restart doesn't delete data.
       })
@@ -21,7 +21,7 @@ export const send = async () => {
       const msg = args[1] || 'Fixed'
       const topic = args[0]
       //
-      await chanel.publish(nameExchange, topic, Buffer.from(msg))
+      chanel.publish(nameExchange, topic, Buffer.from(msg))
       //
       setTimeout(() => {
          connect.close()
