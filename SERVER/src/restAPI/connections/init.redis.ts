@@ -2,7 +2,7 @@ import Redis from 'ioredis'
 import dotenv from 'dotenv'
 dotenv.config()
 //
-const port: number = process.env?.PORT_REDIS_CLOUD ? +process.env.PORT_REDIS_CLOUD : 11579
+//const port: number = process.env?.PORT_REDIS_CLOUD ? +process.env.PORT_REDIS_CLOUD : 11579
 
 // const redis = new Redis({
 //    host: process.env.HOST_REDIS_CLOUD,

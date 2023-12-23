@@ -3,7 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 import helmet from 'helmet'
-import apolloServerConnect from './graphQL/connect.graphql'
+//import apolloServerConnect from './graphQL/connect.graphql'
 import ConnectRestFull from './restAPI/connections/connect.restfull'
 import instanceMongoDB from './database/connect.mongo'
 
@@ -26,7 +26,7 @@ app.use(morgan('dev'))
 //Connect Server
 async function main() {
    try {
-      await Promise.all([instanceMongoDB, apolloServerConnect(process.env?.PORT_GRAPHQL), ConnectRestFull(process.env?.PORT_REST_FULL)])
+      await Promise.all([instanceMongoDB, ConnectRestFull(process.env?.PORT_REST_FULL)])
    } catch (err) {
       console.error('💀 Error starting the node server', err)
    }

@@ -2,14 +2,12 @@ import amqplib from 'amqplib'
 require('dotenv').config()
 //
 
-// const ampq_url_cloud: string = process.env?.AMQP_URL_DOCKER?.toString() || ''
-const ampq_url_docker: string = process.env?.AMQP_URL_DOCKER || 'amqp://guest:phanminhvinh2003@localhost'
+const ampq_url_cloud: string = process.env?.AMQP_URL_CLOUD_TEST?.toString() || ''
 
-//
-export const receiveQueue = async () => {
+const receiveQueue = async () => {
    try {
       //1
-      const connect = await amqplib.connect(ampq_url_docker)
+      const connect = await amqplib.connect(ampq_url_cloud)
       //2
       const chanel = await connect.createChannel()
       //3. create name queue
@@ -33,4 +31,5 @@ export const receiveQueue = async () => {
       console.log(error)
    }
 }
-receiveQueue()
+//
+export default receiveQueue

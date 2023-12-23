@@ -20,6 +20,7 @@ class CartService {
       if (!userId || !product) throw new BadRequestError('Missing Parameter')
       //
       const unselect = ['quantity', 'shop', 'stock', 'sold', '_id', 'attributes', 'createdAt', 'updatedAt', '__v', 'product_rating']
+      //
       const [cartUser, findProduct] = await Promise.all([
          cartModel.findOne({ cart_userId: new Types.ObjectId(userId) }).lean(),
          findProductById(product?.product_id, unselect),

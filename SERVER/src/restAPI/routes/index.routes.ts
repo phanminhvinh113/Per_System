@@ -4,6 +4,7 @@ import { ROLES } from '../../utils/constant'
 const route = express.Router()
 //check API Key
 route.use(ApiKey)
+route.use('/v1/api/upload', require('./v1/upload.v1.routes'))
 // //Check Permission
 route.use(Permission(ROLES.USER))
 //

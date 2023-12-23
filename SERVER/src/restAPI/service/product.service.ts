@@ -11,6 +11,7 @@ import {
 } from '../../models.mongo/repositories/product.repo'
 import { Types } from 'mongoose'
 import { insertInvProduct } from '../../models.mongo/repositories/inventory.repo'
+import { producerQueueProduct } from '../../event/product/rabbitmq/producer'
 
 type productRegistryType = { [key: string]: any }
 //
@@ -143,6 +144,7 @@ class Product {
             stock: product.quantity,
          }
          await insertInvProduct(inventory)
+         await producerQueueProduct({ msg: product })
       }
       return product
    }

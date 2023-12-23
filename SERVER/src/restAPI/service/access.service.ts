@@ -11,6 +11,7 @@ import { TrackingDevice, checkExistUser, findUserByInfo, findUserByUserName, gen
 import keyTokenService from './keyToken.service'
 import { findUserById } from '../../models.mongo/repositories/user.repo'
 import { Types } from 'mongoose'
+
 //
 class accessService {
    // REGISTER
@@ -258,6 +259,29 @@ class accessService {
             return reject(error)
          }
       })
+   }
+
+   // handle retry API
+
+   fetchApiRetry = async ({ url, countRepeat = 0 }: { url: string; countRepeat?: number }) => {
+      const ERROR_COUNT_MAX = 3
+      try {
+         if (countRepeat > ERROR_COUNT_MAX) throw new BadRequestError('Server Sleep, Wait Second!')
+
+         const response = await fetch(url)
+
+         if (response.status < 200 || response.status > 300) {
+            //Time For Each Request Retry And Prevent Concurrent User Request
+            const timeout = countRepeat * 3000 + Math.random() * 1000 + Math.random() * 100
+            //
+            setTimeout(async () => {
+               await this.fetchApiRetry({ url, countRepeat: countRepeat + 1 })
+            }, timeout)
+         }
+         return response
+      } catch (error) {
+         return error
+      }
    }
 }
 export default new accessService()
